@@ -6,10 +6,10 @@
  * @version 0.1
  */
 
-require_once '/class/MySQLConnector.class.php';
+// require_once '/class/MySQLConnector.class.php';
 
-$dbConnector = new MySQLConnector();
-$connection = $dbConnector->getConnection();
+// $dbConnector = new MySQLConnector();
+// $connection = $dbConnector->getConnection();
 
 
 ?>
@@ -169,8 +169,8 @@ $connection = $dbConnector->getConnection();
 							echo "</table>";
 							echo "</div>";
 							
-							// ÜBERSICHT:
-							echo "<h3>Übersicht:</h3>";
+							// ÃœBERSICHT:
+							echo "<h3>Ãœbersicht:</h3>";
 							echo "<div style=\"margin-left:25px;\">";
 							echo "	<h4>Legende: <img src=\"res/legende.PNG\" align=\"middle\" /></h4>";
 							echo "	<figure><img src=\"res/{$system}.PNG\" /></figure>";

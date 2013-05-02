@@ -6,10 +6,10 @@
  * @version 0.1
  */
 
-require_once '/class/MySQLConnector.class.php';
+// require_once '/class/MySQLConnector.class.php';
 
-$dbConnector = new MySQLConnector();
-$connection = $dbConnector->getConnection();
+// $dbConnector = new MySQLConnector();
+// $connection = $dbConnector->getConnection();
 
 
 ?>

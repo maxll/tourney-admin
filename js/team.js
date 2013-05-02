@@ -4,19 +4,24 @@ function TeamViewModel(){
 
 	// TODO fill from DB
 	self.divisions = [
-			{ divName: "Spieklasse wählen"},
-			{ divName: "Herren LK1"},
-			{ divName: "Herren LK2"}
+			{ divNr: "", divName: "Spieklasse wählen"}, //das ist immer da
+			{ divNr: 1, divName: "Herren LK1"},
+			{ divNr: 2, divName: "Herren LK2"}
 	];
 
+	var teamCounter = 0;
+
+	// TODO fill from DB
 	self.teams = ko.observableArray([
-		new Team("KCW", self.divisions[1]),
-		new Team("WSF", self.divisions[1])
+		new Team(1, "KCW", self.divisions[1]),
+		new Team(2, "WSF", self.divisions[1])
 		//new Team("", self.divisions[0])
 	]);
 
+
 	self.addTeam = function(){
-		self.teams.push(new Team("", self.divisions[0]));
+		self.teams.push(new Team(teamCounter, "", self.divisions[0]));
+		teamCounter++;
 	};
 
 	self.removeTeam = function(team){
@@ -31,35 +36,21 @@ function TeamViewModel(){
 		}
 	}, self);
 
-	var testData = {
-		"names": [
-			{"name" : "name 1", "lastname" : "lastname 1"},
-			{"name" : "name 2", "lastname" : "lastname 2"}
-		]
-	};
 
 	self.saveTeamsInDB = function(){
-		var dataj = "";
-		// dataj = ko.toJSON(testData);
-		// dataj = JSON.stringify(testData);
-		dataj = "{\"name\": \"test\"}";
 
-		// dataj = ko.utils.stringifyJson({teams : self.teams()});
-		// dataj = ko.toJSON({teams: self.teams()});
-		alert(dataj);
+		if ( !$('#teamForm').valid() ){
+			// $('#teamForm').showErrors();
+			return false;
+		}
 
-		$.ajax({
-			type: "GET",
-			// type: "POST",
-			url: "ajaxtest.php",
-			data: dataj,
-			contentType: "application/json",
-			success: function(data) { alert(data); },
-			error: function(xhr, status, error) { alert("xhr: " + xhr + "\nstatus: " + status + "\nerror: " + error); }
-		});
 
-		// $.post("ajaxtest.php", dataj, function(data) { alert("Data Loaded: \n" + data);});
-		// $.get("ajaxtest.php", data, function(data) { alert("Data Loaded: \n" + data);} );
+		//var jsondata = ko.toJSON({teams: self.teams()});
+		var jsonTeamData = ko.mapping.toJSON({teams : self.teams()});
+
+		// TODO: beim Callback von $.post die neuen Daten aus der DB laden und anzeigen
+		$.post("backend/handleAjaxRequests.php", {jsonTeamData: jsonTeamData}, function(data) { alert("Data: \n" + data);});
+		// $.get("ajaxtest.php", {jsondata: jsondata}, function(data) { alert("Data: \n" + data); } );
 
 	};
 
@@ -70,10 +61,20 @@ function TeamViewModel(){
 	});*/
 }
 
-function Team(name, division){
+function Team(teamNr, name, division){
 	var self = this;
+	self.teamNr = teamNr;
 	self.name = name;
 	self.division = division;
+}
+
+function Player(number, firstname, name, captain, teamNr){
+	var self = this;
+	self.number = number;
+	self.firstname = firstname;
+	self.name = name;
+	self.captain = captain;
+	self.teamNr = teamNr;
 }
 
 // activate knockout.js in jquery document ready()

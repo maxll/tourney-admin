@@ -7,12 +7,12 @@
  */
  
   
-require_once '/class/MySQLConnector.class.php';
-require_once '/class/CreateTables.class.php';
-require_once '/class/CreateGameSystems.class.php';
+// require_once '/class/MySQLConnector.class.php';
+require_once '/backend/CreateTables.class.php';
+require_once '/backend/CreateGameSystems.class.php';
 
-$dbConnector = new MySQLConnector();
-$connection = $dbConnector->getConnection();
+// $dbConnector = new MySQLConnector();
+// $connection = $dbConnector->getConnection();
 
 ?>
 

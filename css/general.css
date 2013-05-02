@@ -1,0 +1,33 @@
+
+/* --- allgemeines HTML --- */
+body {
+	font-family: calibri, verdana, arial, helvetica, sans-serif;
+	font-size: 12pt;
+}
+
+figure {
+	margin-left: 0;
+}
+
+
+/* --- Seitenstruktur --- */
+
+.nav-sitelink {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+
+/* --- allgemeines --- */
+
+.center {
+	text-align: center;
+}
+
+.input_number {
+	text-align: right;
+}
+
+.hidden {
+	display: none;
+}

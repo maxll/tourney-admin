@@ -13,8 +13,8 @@ $connection = $dbConnector->getConnection();
 		<link rel="stylesheet" type="text/css" href="css/general.css" />
 		<script type="text/javascript" src="js/knockout-2.2.1.min.js"></script>
 		<script type="text/javascript" src="js/knockout-mapping-2.4.1.min.js"></script>
+		<script type="text/javascript" src="js/knockout.validation.min.js"></script>
 		<script type="text/javascript" src="js/jquery-2.0.0.min.js"></script>
-		<script type="text/javascript" src="js/jquery.validate.min.js"></script>
 	</head>
 	
 	

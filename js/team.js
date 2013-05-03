@@ -1,32 +1,35 @@
+
+// need for validation
+var teamViewModel;
+
 function TeamViewModel(){
 
 	var self = this;
 
 	// TODO fill from DB
 	self.divisions = [
-			{ divNr: "", divName: "Spieklasse wählen"}, //das ist immer da
 			{ divNr: 1, divName: "Herren LK1"},
 			{ divNr: 2, divName: "Herren LK2"}
 	];
 
-	var teamCounter = 0;
-
 	// TODO fill from DB
 	self.teams = ko.observableArray([
-		new Team(1, "KCW", self.divisions[1]),
-		new Team(2, "WSF", self.divisions[1])
-		//new Team("", self.divisions[0])
-	]);
+		new Team("KCW", self.divisions[0]),
+		new Team("WSF", self.divisions[0])
+	]);//.extend({ validArray: true});
 
+	// validation rule
+	self.teams.extend({ validArray: true});
 
 	self.addTeam = function(){
-		self.teams.push(new Team(teamCounter, "", self.divisions[0]));
-		teamCounter++;
+		self.teams.push(new Team("", ""));
 	};
 
 	self.removeTeam = function(team){
 		self.teams.remove(team);
 	};
+
+	self.test = ko.observable(5).extend({ mustEqual: 5 });
 
 	self.buttonLabel = ko.computed(function(){
 		if(self.teams().length > 1){
@@ -34,24 +37,23 @@ function TeamViewModel(){
 		} else {
 			return "Mannschaft hinzufügen";
 		}
-	}, self);
-
+	});
 
 	self.saveTeamsInDB = function(){
 
-		if ( !$('#teamForm').valid() ){
-			// $('#teamForm').showErrors();
-			return false;
+		// got valid form?
+		if(teamViewModel.isValid()){
+
+			// var jsonTeamData = ko.toJSON({teams: self.teams()});
+			var jsonTeamData = ko.mapping.toJSON({teams : self.teams()});
+
+			// TODO: beim Callback von $.post die neuen Daten aus der DB laden und anzeigen
+			$.post("backend/handleAjaxRequests.php", {jsonTeamData: jsonTeamData}, function(data) { alert("Data: \n" + data);});
+			// $.get("backend/handleAjaxRequests.php", {jsondata: jsonTeamData}, function(data) { alert("Data: \n" + data); } );
+
+		} else {
+			alert ("ERROR:\nFehlerhafte oder Unvollständige Eingaben!\nZum Speichern, bitte beheben!");
 		}
-
-
-		//var jsondata = ko.toJSON({teams: self.teams()});
-		var jsonTeamData = ko.mapping.toJSON({teams : self.teams()});
-
-		// TODO: beim Callback von $.post die neuen Daten aus der DB laden und anzeigen
-		$.post("backend/handleAjaxRequests.php", {jsonTeamData: jsonTeamData}, function(data) { alert("Data: \n" + data);});
-		// $.get("ajaxtest.php", {jsondata: jsondata}, function(data) { alert("Data: \n" + data); } );
-
 	};
 
 	// get JSON data from team.php and populate team array
@@ -61,11 +63,10 @@ function TeamViewModel(){
 	});*/
 }
 
-function Team(teamNr, name, division){
+function Team(name, initialDivision){
 	var self = this;
-	self.teamNr = teamNr;
-	self.name = name;
-	self.division = division;
+	self.name = ko.observable(name).extend({ required: true });
+	self.division = ko.observable(initialDivision).extend({ required: true });
 }
 
 function Player(number, firstname, name, captain, teamNr){
@@ -77,7 +78,41 @@ function Player(number, firstname, name, captain, teamNr){
 	self.teamNr = teamNr;
 }
 
-// activate knockout.js in jquery document ready()
+
+
+function setupKnockoutValidation(){
+
+	// deactivate error-text-messages, use ".errorElement" for element-decoration
+	ko.validation.init({
+		insertMessages: false,
+		decorateElement: true,
+		errorElementClass: "errorElement"
+	});
+
+	// custom validation Rule
+	ko.validation.rules["validArray"] = {
+		validator: function (arr, bool) {
+			if (!arr || typeof arr !== "object" || !(arr instanceof Array)) {
+				throw "[validArray] Parameter must be an array";
+			}
+			return bool === (arr.filter(function (element) {
+				return ko.validation.group(ko.utils.unwrapObservable(element))().length !== 0;
+			}).length === 0);
+		},
+		message: "Every element in the array must validate to '{0}'"
+	};
+
+	ko.validation.registerExtenders();
+}
+
+
+
+// jquery document ready()
 $(document).ready(function(){
-	ko.applyBindings(new TeamViewModel());
+
+	setupKnockoutValidation();
+
+	teamViewModel = ko.validatedObservable(new TeamViewModel());
+	ko.applyBindings(teamViewModel);
+
 });

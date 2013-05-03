@@ -2,8 +2,8 @@
 
 require_once 'MySQLConnector.class.php';
 
-$dbConnector = new MySQLConnector();
-$connection = $dbConnector->getConnection();
+// $dbConnector = new MySQLConnector();
+// $connection = $dbConnector->getConnection();
 
 	// echo "GET:";
 	// var_dump($_GET);
@@ -17,6 +17,9 @@ $connection = $dbConnector->getConnection();
 
 
 	if(isset($_POST)){
+
+		$dbConnector = new MySQLConnector();
+		$connection = $dbConnector->getConnection();
 		
 		foreach ($_POST as $key => $value){
 
@@ -53,10 +56,14 @@ function insertTeamsInDB($jsonTeamData){
 		$sql .= " ({$team['name']}, {$team['division']['divNr']}),";
 	}
 	
-	// delete last ','
+	// delete last comma
 	$sql = substr_replace($sql, "", -1);
 
-	echo $sql;
+	if (mysqli_query($connection, $sql)){
+		//echo "<li>INSERT INTO <strong>division</strong> was successfull</li>";
+	} else {
+		echo "<li>Error in INSERT INTO <strong>division</strong>: " . mysqli_error($connection) . "</li>";
+	}
 }
 
 

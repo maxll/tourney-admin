@@ -11,30 +11,19 @@
 <html>
 	<head>
 		<script type="text/javascript" src="js/team.js"></script>
-		<script type="text/javascript">
-			/*$(document).ready(function(){
-				$('#teamForm').validate({
-					debug: true
-					onfocusout: true
-				})
-			});*/
-		</script>
-		<style>
-			#divSelector { margin-left: .5em; float: left; }
-		  	#divSelector, label { float: left; font-family: Arial, Helvetica, sans-serif; font-size: small; }
-			br { clear: both; }
-			input { border: 1px solid black; margin-bottom: .5em;  }
-			input.error { border: 1px solid red; }
-</style>
+		<style type="text/css">
+			.errorElement { 
+				-webkit-box-shadow: 0px 0px 2px 1px red;
+				box-shadow: 0px 0px 2px 1px red;
+			}
+		</style>
 	</head>
 	
 	<body>
 		<h3>Übersicht über Mannschaften:</h3>
 		<section>
-
 		<?php
 					
-		/* 
 			$sql = "SELECT name,
 						(SELECT name FROM division WHERE team.div_nr = division.nr) div_name
 					FROM team";
@@ -46,12 +35,12 @@
 				echo "<li>{$row['name']} ({$row['div_name']})</li>";
 			}
 			echo "</ul>";
-		*/	
+		
 		?>
 		</section>
-		<h3>Neue Mannschaft anlegen:</h3>
+		<h3>Neue Mannschaften anlegen:</h3>
 		<section>
-			<form id="teamForm">
+			<!-- <form id="teamForm"> -->
 			<table border="0" cellspacing="0" cellpadding="5px">
 				<thead>
 				<tr>
@@ -62,16 +51,17 @@
 				</thead>
 				<tbody data-bind="foreach: teams">
 				<tr>
-					<td><input id="teamName" data-bind="value: name" placeholder="Name" class="required"></td>
-					<td><select id="divSelector" data-bind="options: $root.divisions, optionsValue: 'divNr', optionsText: 'divName'" class="required"></select></td>
-					<td><a href="#" data-bind="click: $root.removeTeam"><small>Mannschaft löschen</small></a></td>
+					<td><input data-bind="value: name" placeholder="Name"></td>
+					<td><select data-bind="value: division, options: $root.divisions, optionsText: 'divName', optionsCaption: 'Spielklasse wählen..'"></select></td>
+						<!-- optionsValue: 'divNr', -->
+					<td><a href="#" data-bind="click: $root.removeTeam"><small>entfernen</small></a></td>
 				</tr>
 				</tbody>
 			</table>
 			<a href="#" data-bind="click: addTeam"><small>neue Mannschaft eintragen..</small></a><br />
 			<br />
-			<input type="submit" data-bind="value: buttonLabel, enable: teams().length > 0, click: saveTeamsInDB" />
-			</form>
+			<button data-bind="click: saveTeamsInDB, enable: teams().length > 0"><!--ko text: buttonLabel--><!--/ko--></button>
+			<!-- </form> -->
 		</section>
 	</body>
 </html>

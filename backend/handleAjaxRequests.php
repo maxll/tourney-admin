@@ -44,7 +44,9 @@ $dbAccess = new MySQL_Access();
 			case 'deleteTeams':
 				deleteTeams($value);
 				break;
-
+			case 'updateTeams':
+				updateTeams($value);
+				break;
 			}
 		}
 	}
@@ -55,31 +57,40 @@ function insertTeams($jsonTeamData){
 
 	global $dbAccess;
 
-	// decode JSON, fill array, send data
 	$teamData = json_decode($jsonTeamData, true);
 
 	$teamarray = array();
 	foreach ($teamData['teams'] as $team){
-		array_push($teamarray, array('name' => "{$team['name']}", 'div_name' => $team['division']));
+		$name = mysql_real_escape_string($team['name']);
+		array_push($teamarray, array('name' => $name, 'div_id' => $team['divisionId']));
 	}
 
 	$dbAccess->insertTeams($teamarray);	
 
 }
 
-function deleteTeams($jsonTeamData){
+function updateTeams($jsonTeamData){
 
 	global $dbAccess;
 
-	// decode JSON, fill array, send data
 	$teamData = json_decode($jsonTeamData, true);
 
 	$teamarray = array();
 	foreach ($teamData['teams'] as $team){
-		array_push($teamarray, array('name' => "{$team['name']}", 'div_name' => $team['division']));
+		array_push($teamarray, array('id' => $team['id'], 'name' => "{$team['name']}", 'div_id' => $team['divisionId']));
 	}
 
-	$dbAccess->deleteTeams($teamarray);	
+	$dbAccess->updateTeams($teamarray);	
+
+}
+
+function deleteTeams($jsonTeamIdData){
+
+	global $dbAccess;
+
+	$teamIDarray = json_decode($jsonTeamIdData, true);
+
+	$dbAccess->deleteTeams($teamIDarray);
 }
 
 

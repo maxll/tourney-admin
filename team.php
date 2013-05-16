@@ -1,10 +1,4 @@
 <?php
-/**
- *
- * @author Maximilian Walden
- * @copyright Copyright &copy; 28.03.2013, Maximilian Walden
- * @version 0.1
- */
 
 ?>
 
@@ -26,12 +20,12 @@
 				<tbody data-bind="foreach: editTeams()">
 				<tr>
 					<td><input data-bind="value: name" placeholder="Name"></td>
-					<td><select data-bind="options: $root.divisions, value: division"></select></td>
+					<td><select data-bind="options: $root.divisions, optionsText: 'name', optionsValue: 'id', value: divisionId"></td>
 				</tr>
 				</tbody>
 			</table>
 			<br />
-			<button>Speichern</button>&nbsp;&nbsp;
+			<button data-bind="click: updateTeamEdit">Speichern</button>&nbsp;&nbsp;
 			<button data-bind="click: cancelTeamEdit">Abbrechen</button>
 		</section>
 		<h3>Übersicht über Mannschaften:</h3>
@@ -47,9 +41,9 @@
 				</thead>
 				<tbody data-bind="foreach: teams()">
 				<tr>
-					<td><input class="teamSelectCheckbox" type="checkbox" data-bind="value: id" /></td>
+					<td><input class="teamSelectCheckbox" type="checkbox" data-bind="value: id" onClick="controlOkButton()" /></td>
 					<td><span data-bind="text: name"></td>
-					<td><span data-bind="text: division"></td>
+					<td><span data-bind="text: divisionName"></td>
 				</tr>
 				</tbody>
 				<tr>
@@ -62,7 +56,7 @@
 				<option value="edit">bearbeiten</option>
 				<option value="delete">löschen</option>
 			</select>&nbsp;
-			<button data-bind="click: performSelectedChoice, enable: teamNrToEditDelete().length > 0">OK</button><br />
+			<button id="OK_Button" data-bind="click: performEditDelete">OK</button><br />
 		</section>
 		<h3><a href="#" data-bind="click: showNewTeams, visible: newTeams().length == 0">Neue Mannschaften anlegen:</a></h3>
 		<h3 data-bind="visible: newTeams().length > 0">Neue Mannschaften anlegen:</h3>
@@ -78,7 +72,7 @@
 				<tbody data-bind="foreach: newTeams()">
 				<tr>
 					<td><input data-bind="value: name" placeholder="Name"></td>
-					<td><select data-bind="options: $root.divisions, optionsCaption: 'Spielklasse wählen..', optionsText: 'name', optionsValue: 'id'"></select>
+					<td><select data-bind="options: $root.divisions, optionsCaption: 'Spielklasse wählen..', optionsText: 'name', optionsValue: 'id', value: divisionId"></select>
 					</td>
 					<td><a href="#" data-bind="click: $root.removeNewTeam"><small>&raquo;&nbsp;entfernen</small></a></td>
 				</tr>

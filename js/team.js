@@ -14,8 +14,6 @@ function TeamViewModel(){
 
 			var parsed = JSON.parse(data);
 
-			console.log(parsed.divisions[0].id);
-			console.log(parsed.divisions[0].name);
 			for(var i = 0; i < parsed.divisions.length; i++){
 				self.divisions.push({id: parsed.divisions[i].id, name: parsed.divisions[i].name});
 			}
@@ -34,23 +32,14 @@ function TeamViewModel(){
 			var parsed =  JSON.parse(data);
 
 			for (var i = 0; i < parsed.teams.length; i++) {
-				self.teams.push(new Team(parsed.teams[i].id, parsed.teams[i].name, parsed.teams[i].div_name));
+				self.teams.push(new Team(parsed.teams[i].team_id, parsed.teams[i].team_name, parsed.teams[i].div_name));
 			}
+			self.deselectAllTeams();
 		});
 	};
 	// -----------------------------------------
 
-
-	// copy teams, which will be edited
-	self.editTeams = ko.observableArray([]);
-
-	// copy teams, which will be deleted
-	self.deleteTeams = ko.observableArray([]);
-
-	// filled from checkboxes to get the right teams for edit or delet
-	self.teamNrToEditDelete = ko.observableArray([]);
-
-	self.performSelectedChoice = function() {
+	self.performEditDelete = function() {
 
 		if($("#editDeleteSelection").val() == "edit"){
 			self.copySelectedInEditTeams();
@@ -59,66 +48,68 @@ function TeamViewModel(){
 		}
 	};
 
-	self.copySelectedInEditTeams = function() {
-		/*self.editTeams.removeAll();
-		var parsedAll =  JSON.parse(ko.toJSON({teams: self.teams()}));
+	// copy teams, which will be edited
+	self.editTeams = ko.observableArray([]);
 
-		for(var i = 0; i < self.teamNrToEditDelete().length; i++){
+	self.copySelectedInEditTeams = function() {
+		self.editTeams.removeAll();
+
+		var teamIDs = [];
+		$(".teamSelectCheckbox:checked").each(function() {
+			teamIDs.push($(this).val());
+		});
+
+		for(var i = 0; i < teamIDs.length; i++){
 			for(var j = 0; j < self.teams().length; j++){
-				if(self.teamNrToEditDelete()[i] == self.teams()[j].nr){
-					self.editTeams.push(new Team(self.teams()[j].nr, parsedAll.teams[j].name, parsedAll.teams[j].division));
+				if(teamIDs[i] == self.teams()[j].id){
+					self.editTeams.push(new Team(self.teams()[j].id, self.teams()[j].name(), self.teams()[j].divisionId()));
 				}
 			}
 		}
-		self.teamNrToEditDelete.removeAll();
-		$("#editTeams").slideDown();*/
+		$("#editTeams").slideDown();
 	};
 
 	self.deleteSelectedTeams = function() {
-		/*self.deleteTeams.removeAll();
-		for(var i = 0; i < self.teamNrToEditDelete().length; i++){
-			for(var j = 0; j < self.teams().length; j++){
-				if(self.teamNrToEditDelete()[i] == self.teams()[j].nr){
-					self.deleteTeams.push(self.teams()[j]);
-				}
-			}
-		}
 
-		var jsonTeamData = ko.toJSON({teams: self.deleteTeams()});
+		var teamIDs = [];
+		$(".teamSelectCheckbox:checked").each(function() {
+			teamIDs.push($(this).val());
+		});
+
+		var jsonTeamData = ko.toJSON(teamIDs);
+
+		self.deselectAllTeams();
+		$("#editDeleteSelection").val("edit");
 
 		$.post("backend/handleAjaxRequests.php", {deleteTeams: jsonTeamData}, function(data) {
-			self.teamNrToEditDelete.removeAll();
 			self.getAllTeams();
-		});*/
+		});
+	};
+
+	self.updateTeamEdit = function() {
+
+		var jsonTeamData = ko.toJSON({teams: self.editTeams()});
+
+		$.post("backend/handleAjaxRequests.php", {updateTeams: jsonTeamData}, function(data) {
+			self.editTeams.removeAll();
+			$("#editTeams").slideUp();
+			self.getAllTeams();
+		});
 	};
 
 	self.selectAllTeams = function(){
 		$(".teamSelectCheckbox").prop("checked", true);
-
-		/*self.teamNrToEditDelete.removeAll();
-		for(var i = 0; i < self.teams().length; i++){
-			self.teamNrToEditDelete.push(i);
-		}
-		$(".teamSelectCheckbox").prop("checked", true);*/
+		$("#OK_Button").prop("disabled", false);
 	};
-
 	self.deselectAllTeams = function() {
 		$(".teamSelectCheckbox").prop("checked", false);
-		// self.teamNrToEditDelete.removeAll();
+		$("#OK_Button").prop("disabled", true);
 	};
-
-	self.updateTeamEdit = function() {
-		// TODO
-		// ajax request senden
-		// neuer team name, neue division, alter teamname, alte division über nummer holen, die gleich ist
-		// editTeams() sind teams mit name, div und nr
-		// über nr den alten namen und alte division aus teams()
-	};
-
 	self.cancelTeamEdit = function() {
 		$("#editTeams").slideUp(function() {
-			// self.editTeams.removeAll();
+			self.editTeams.removeAll();
 		});
+		self.deselectAllTeams();
 	};
 	// -----------------------------------------
 
@@ -142,7 +133,7 @@ function TeamViewModel(){
 	};
 
 	self.showNewTeams = function() {
-		self.newTeams.push(new Team("", ""));
+		self.newTeams.push(new Team("", "", ""));
 		$("#createTeamSection").slideDown();
 	};
 
@@ -153,40 +144,27 @@ function TeamViewModel(){
 
 			// team is already in teams()
 			if(self.isUniqueTeam()){
+
 				var jsonTeamData = ko.toJSON({teams: self.newTeams()});
-				// var jsonTeamData = ko.mapping.toJSON({teams : self.newTeams()});
 
 				$.post("backend/handleAjaxRequests.php", {insertNewTeams: jsonTeamData}, function(data) {
 					self.getAllTeams();
 					self.clearNewTeams();
 				});
 			} else {
-				alert("Fehler:\nEine oder mehrere Mannschaften sind bereits vorhanden");
+				alert("Error:\nEine oder mehrere Mannschaften sind bereits vorhanden und können somit nicht noch einmal hinzugefügt werden!");
 			}
 		} else {
-			alert ("Fehler:\nBitte alle Felder ausfüllen!");
+			alert ("Error:\nEs sind nicht alle erforderlichen Felder ausgefüllt, ein Hinzufügen ist somit nicht möglich!");
 		}
 	};
 	// -----------------------------------------
 
 	self.isUniqueTeam = function() {
 
-		// check values in Array by converting to JSON and back = ugly.. Solution?
-		/*var parsedNew =  JSON.parse(ko.toJSON({teams: self.newTeams()}));
-		var parsedAll =  JSON.parse(ko.toJSON({teams: self.teams()}));
-
 		for(var i = 0; i < self.newTeams().length; i++){
 			for(var j = 0; j < self.teams().length; j++){
-				if((parsedNew.teams[i].name == parsedAll.teams[j].name) && (parsedNew.teams[i].division == parsedAll.teams[j].division)){
-					return false;
-				}
-			}
-		}
-		return true;*/
-
-		for(var i = 0; i < self.newTeams().length; i++){
-			for(var j = 0; j < self.teams().length; j++){
-				if(self.newTeams()[i].id == self.teams()[j].id){
+				if((self.newTeams()[i].name().toLowerCase() == self.teams()[j].name().toLowerCase()) && (self.newTeams()[i].divisionId() == self.teams()[j].divisionId())){
 					return false;
 				}
 			}
@@ -195,7 +173,7 @@ function TeamViewModel(){
 	};
 
 	self.addTeamButtonLabel = ko.computed(function() {
-		if(self.newTeams().length > 1){
+		if(self.newTeams().length > 1) {
 			return "Mannschaften hinzufügen";
 		} else {
 			return "Mannschaft hinzufügen";
@@ -210,18 +188,20 @@ function TeamViewModel(){
 	self.getAllTeams();
 }
 
-function Team(id, name, initialDivision){
+function Team(id, name, initialDivisionId){
 	var self = this;
 	self.id = id;
 	self.name = ko.observable(name).extend({ required: true });
-	self.division = ko.observable(initialDivision).extend({ required: true });
-}
+	self.divisionId = ko.observable(initialDivisionId).extend({ required: true });
+	self.divisionName = ko.computed(function() {
 
-/*function Division(id, name){
-	var self = this;
-	self.id = id;
-	self.name = name;
-}*/
+		for(var i = 0; i < teamViewModel().divisions.length; i++){
+			if(self.divisionId() == teamViewModel().divisions[i].id){
+				return teamViewModel().divisions[i].name;
+			}
+		}
+	});
+}
 
 
 /*function Player(number, firstname, name, captain, teamName, teamDivision){
@@ -274,3 +254,13 @@ $(document).ready(function(){
 	ko.applyBindings(teamViewModel);
 
 });
+
+
+function controlOkButton(){
+	var n = $(".teamSelectCheckbox:checked").length;
+	if(n === 0){
+		$("#OK_Button").prop("disabled", true);
+	} else {
+		$("#OK_Button").prop("disabled", false);
+	}
+}

@@ -1,18 +1,7 @@
 <?php
-/**
- *
- * @author Maximilian Walden
- * @copyright Copyright &copy; 22.03.2013, Maximilian Walden
- * @version 0.1
- */
- 
   
-// require_once '/class/MySQLConnector.class.php';
 require_once '/backend/CreateTables.class.php';
 require_once '/backend/CreateGameSystems.class.php';
-
-// $dbConnector = new MySQLConnector();
-// $connection = $dbConnector->getConnection();
 
 ?>
 

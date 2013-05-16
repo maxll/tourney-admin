@@ -32,15 +32,14 @@ class CreateTables {
     	
     	$table = "division";
     	
-    	$sql = "CREATE TABLE $table (" .
- 			"nr INT NOT NULL UNIQUE AUTO_INCREMENT," .
- 			"PRIMARY KEY(nr)," .
- 			"name varchar(50) UNIQUE," .
- 			"game_length INT DEFAULT 25," .
- 			"points_win INT DEFAULT 3," .
- 			"points_draw INT DEFAULT 1," .
- 			"points_defeat INT DEFAULT 0," .
- 			"tournament_id INT NOT NULL)";
+    	$sql = "CREATE TABLE $table (
+                id INT NOT NULL AUTO_INCREMENT,
+     			name varchar(50) NOT NULL UNIQUE,
+     			game_length INT DEFAULT 25,
+     			points_win INT DEFAULT 3,
+     			points_draw INT DEFAULT 1,
+     			points_defeat INT DEFAULT 0,
+                PRIMARY KEY(id))";
 		
 		$this->dropTable($table);
 		$this->createTable($table, $sql);
@@ -51,10 +50,12 @@ class CreateTables {
     	
     	$table = "team";
     	
-    	$sql = "CREATE TABLE $table (" .
- 			"name varchar(50) NOT NULL," .
- 			"div_nr INT NOT NULL," .
- 			"PRIMARY KEY(name, div_nr))";
+    	$sql = "CREATE TABLE $table (
+                id INT NOT NULL AUTO_INCREMENT,
+     			name varchar(50),
+     			div_id INT NOT NULL,
+                PRIMARY KEY(id),
+                UNIQUE(name, div_id))";
     	
 		$this->dropTable($table);
 		$this->createTable($table, $sql);
@@ -65,13 +66,15 @@ class CreateTables {
     	
     	$table = "player";
     	
-    	$sql = "CREATE TABLE $table (" .
- 			"firstname varchar(50) NOT NULL," .
- 			"name varchar(50) NOT NULL," .
- 			"PRIMARY KEY(name, firstname)," .
- 			"team_name varchar(50)," .
- 			"number INT," .
- 			"is_captain TINYINT(1))";
+    	$sql = "CREATE TABLE $table (
+                id INT NOT NULL AUTO_INCREMENT,
+     			firstname varchar(50),
+     			name varchar(50),
+     			team_id INT NOT NULL,
+     			number INT,
+     			is_captain TINYINT(1),
+                PRIMARY KEY(id),
+                UNIQUE(firstname, name))";
 
 		$this->dropTable($table);
 		$this->createTable($table, $sql);
@@ -88,18 +91,20 @@ class CreateTables {
     	 */
     	$table = "stats_per_group";
     	
-    	$sql = "CREATE TABLE $table (" .
- 			"team_name varchar(50) NOT NULL," .
- 			"group_name varchar(50) NOT NULL," .
- 			"div_nr INT NOT NULL," .
- 			"PRIMARY KEY(team_name, group_name, div_nr)," .
- 			"wins INT DEFAULT 0," .
- 			"draws INT DEFAULT 0," .
- 			"defeats INT DEFAULT 0," .
- 			"points INT DEFAULT 0," .
- 			"goals_scored INT DEFAULT 0," .
- 			"golas_received INT DEFAULT 0," .
-			"goaldiff INT DEFAULT 0)";
+    	$sql = "CREATE TABLE $table (
+                id INT NOT NULL AUTO_INCREMENT,
+     			team_id INT NOT NULL,
+     			group_id INT NOT NULL,
+     			wins INT DEFAULT 0,
+     			draws INT DEFAULT 0,
+     			defeats INT DEFAULT 0,
+     			points INT DEFAULT 0,
+     			goals_scored INT DEFAULT 0,
+     			golas_received INT DEFAULT 0,
+    			goaldiff INT DEFAULT 0, 
+                rank INT DEFAULT 0,
+                PRIMARY KEY(id), 
+                UNIQUE(team_id, group_id))";
 
 		$this->dropTable($table);
 		$this->createTable($table, $sql);
@@ -110,13 +115,15 @@ class CreateTables {
     	
     	$table = "`group`";
     	
-    	$sql = "CREATE TABLE $table (" .
- 			"name varchar(50) NOT NULL," .
- 			"div_nr INT," .
- 			"PRIMARY KEY(name, div_nr)," .
- 			"sys_nr INT," .
- 			"startgroup TINYINT(1)," .
- 			"modified_game_length INT DEFAULT null)";
+    	$sql = "CREATE TABLE $table (
+                id INT NOT NULL AUTO_INCREMENT,
+     			name varchar(50),
+     			div_id INT NOT NULL,
+     			sys_nr INT,
+     			startgroup TINYINT(1),
+     			modified_game_length INT DEFAULT null, 
+                PRIMARY KEY(id), 
+                UNIQUE(name, div_id))";
 
 		$this->dropTable($table);
 		$this->createTable($table, $sql);
@@ -127,13 +134,12 @@ class CreateTables {
     	 
     	$table = "prev_group";
     	 
-    	$sql = "CREATE TABLE $table (" .
-    	"group_name varchar(50) NOT NULL," .
-    	"prev_group_name varchar(50) NOT NULL," .
-    	"div_nr INT NOT NULL," .
-    	"PRIMARY KEY(group_name, prev_group_name, div_nr)," .
-    	"position_start INT," .
-    	"position_end INT)";
+    	$sql = "CREATE TABLE $table (
+                group_id INT NOT NULL,
+                prev_group_id INT NOT NULL,
+                position_start INT,
+                position_end INT, 
+                PRIMARY KEY(group_id, prev_group_id))";
     
     	$this->dropTable($table);
     	$this->createTable($table, $sql);
@@ -144,14 +150,14 @@ class CreateTables {
     	
 		$table = "system";
     	
-    	$sql = "CREATE TABLE $table (" .
- 			"nr INT NOT NULL UNIQUE," .
- 			"PRIMARY KEY(nr)," .
- 			"group_nr INT," .
- 			"name varchar(50)," .
- 			"type INT," .
- 			"nr_of_teams INT," .
- 			"nr_of_games INT)";
+    	$sql = "CREATE TABLE $table (
+     			nr INT NOT NULL,
+     			PRIMARY KEY(nr),
+     			group_id INT,
+     			name varchar(50),
+     			type INT,
+     			nr_of_teams INT,
+     			nr_of_games INT)";
 
 		$this->dropTable($table);
 		$this->createTable($table, $sql);
@@ -168,18 +174,18 @@ class CreateTables {
     	 */
 		$table = "game";
     	
-    	$sql = "CREATE TABLE $table (" .
- 			"nr INT NOT NULL UNIQUE," .
- 			"PRIMARY KEY(nr)," .
- 			"sys_nr INT NOT NULL," .
- 			"overall_nr INT,".
- 			"slot_team1_nr INT NOT NULL," .
- 			"slot_team2_nr INT NOT NULL," .
- 			"slot_ref_nr INT NOT NULL," .
- 			"team1_score INT DEFAULT 0," .
- 			"team2_score INT DEFAULT 0," .
- 			"modified_game_length INT DEFAULT NULL," . 
- 			"invalid TINYINT(1) DEFAULT 0)";
+    	$sql = "CREATE TABLE $table (
+     			nr INT NOT NULL,
+     			PRIMARY KEY(nr),
+     			sys_nr INT NOT NULL,
+     			verall_nr INT,
+     			slot_team1_nr INT NOT NULL,
+     			slot_team2_nr INT NOT NULL,
+     			slot_ref_nr INT NOT NULL,
+     			team1_score INT DEFAULT 0,
+     			team2_score INT DEFAULT 0,
+     			modified_game_length INT DEFAULT NULL, 
+     			invalid TINYINT(1) DEFAULT 0)";
 
 		$this->dropTable($table);
 		$this->createTable($table, $sql);
@@ -190,11 +196,11 @@ class CreateTables {
     	
     	$table = "slot";
     	 
-    	$sql = "CREATE TABLE $table (" .
-    			"nr INT NOT NULL UNIQUE," .
-    			"PRIMARY KEY(nr)," .
-    			"team_name varchar(50)," .
-    			"name varchar(50))";
+    	$sql = "CREATE TABLE $table (
+    			nr INT NOT NULL,
+    			PRIMARY KEY(nr),
+    			team_name varchar(50),
+    			name varchar(50))";
     	
     	$this->dropTable($table);
 		$this->createTable($table, $sql);

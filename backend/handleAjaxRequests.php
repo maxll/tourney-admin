@@ -1,80 +1,115 @@
 <?php
 
-require_once 'MySQLConnector.class.php';
+require_once 'MySQL_Access.class.php';
 
-// $dbConnector = new MySQLConnector();
-// $connection = $dbConnector->getConnection();
+$dbAccess = new MySQL_Access();
 
-	// echo "GET:";
-	// var_dump($_GET);
 
 	// echo "POST:";
 	// var_dump($_POST);
 
-	// if(isset($_GET['jsondata'])){
-	// 	echo "GET klappt\n";
-	// }
+	// echo "GET:";
+	// var_dump($_GET);
+
+	/**
+	 * check $_GET for loading from database
+	 */
+	if(isset($_GET)){
+
+		foreach ($_GET as $key => $value){
+
+			switch($key) {
+			case 'getAllTeams':
+				getAllTeams();
+				break;
+			case 'getAllDivisionNames':
+				getAllDivisionNames();
+				break;
+			}
+		}
+	}
 
 
+	/**
+	 * check $_POST for saving to database
+	 */
 	if(isset($_POST)){
 
-		$dbConnector = new MySQLConnector();
-		$connection = $dbConnector->getConnection();
-		
 		foreach ($_POST as $key => $value){
 
-			switch ($key) {
-			case 'jsonTeamData':
-				insertTeamsInDB($value);
+			switch($key) {
+			case 'insertNewTeams':
+				insertTeams($value);
 				break;
-			default:
+			case 'deleteTeams':
+				deleteTeams($value);
 				break;
-			
-			} // switch
-		} // foreach
-	} // isset
-	
 
-	/*
-	if (mysqli_query($connection, $sql)){
-		//echo "<li>INSERT INTO <strong>division</strong> was successfull</li>";
-	} else {
-		echo "<li>Error in INSERT INTO <strong>division</strong>: " . mysqli_error($connection) . "</li>";
-		}*/
+			}
+		}
+	}
 
 
-function insertTeamsInDB($jsonTeamData){
 
+function insertTeams($jsonTeamData){
+
+	global $dbAccess;
+
+	// decode JSON, fill array, send data
 	$teamData = json_decode($jsonTeamData, true);
 
-	// instert-statement
-	$sql = "INSERT INTO team (name, div_nr) VALUES";
-
-	// VALUES for each entry in teams
+	$teamarray = array();
 	foreach ($teamData['teams'] as $team){
-		
-		$sql .= " ({$team['name']}, {$team['division']['divNr']}),";
+		array_push($teamarray, array('name' => "{$team['name']}", 'div_name' => $team['division']));
 	}
-	
-	// delete last comma
-	$sql = substr_replace($sql, "", -1);
 
-	if (mysqli_query($connection, $sql)){
-		//echo "<li>INSERT INTO <strong>division</strong> was successfull</li>";
-	} else {
-		echo "<li>Error in INSERT INTO <strong>division</strong>: " . mysqli_error($connection) . "</li>";
+	$dbAccess->insertTeams($teamarray);	
+
+}
+
+function deleteTeams($jsonTeamData){
+
+	global $dbAccess;
+
+	// decode JSON, fill array, send data
+	$teamData = json_decode($jsonTeamData, true);
+
+	$teamarray = array();
+	foreach ($teamData['teams'] as $team){
+		array_push($teamarray, array('name' => "{$team['name']}", 'div_name' => $team['division']));
 	}
+
+	$dbAccess->deleteTeams($teamarray);	
 }
 
 
+function getAllTeams(){
 
-	/*$.ajax({
-		type: "GET",
-		// type: "POST",
-		url: "ajaxtest.php",
-		data: {jsondata: jsondata},
-		contentType: "application/json",
-		success: function(data) { alert(data); }
-		// error: function(xhr, status, error) { alert("xhr: " + xhr + "\nstatus: " + status + "\nerror: " + error); }
-	});*/
+	global $dbAccess;
+	$teams = array();
+
+	$teams = $dbAccess->selectAllTeams();
+
+	$teams = json_encode($teams);
+	
+	$teams = json_encode("{ \"teams\" : $teams}");
+	
+	echo $teams;
+
+}
+
+function getAllDivisionNames(){
+	global $dbAccess;
+
+	$divisions = array();
+
+	$divisions = $dbAccess->selectAllDivisionNames();
+
+	$divisions = json_encode($divisions);
+
+	$divisions = json_encode("{ \"divisions\" : $divisions}");
+
+	echo $divisions;
+}
+
 ?>

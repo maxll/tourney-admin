@@ -1,8 +1,8 @@
 <?php
 
-require_once '/backend/MySQLConnector.class.php';
+require_once '/backend/MySQL_Access.class.php';
 
-$dbConnector = new MySQLConnector();
+$dbConnector = new MySQL_Access();
 $connection = $dbConnector->getConnection();
 ?>
 
@@ -23,8 +23,7 @@ $connection = $dbConnector->getConnection();
 			<h3 class="center">Turnierplan - Verwaltung</h3>
 			<div style="width:100%; margin-left:10px">
 			<?php 
-				$sites = array(	"Vereine" => "club",
-								"Mannschaften" => "team",
+				$sites = array(	"Mannschaften" => "team",
 								"Spielklassen" => "division", 
 								"Gruppen" => "group",
 								"Spielsysteme" => "system",

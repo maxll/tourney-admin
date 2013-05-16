@@ -11,37 +11,63 @@
 <html>
 	<head>
 		<script type="text/javascript" src="js/team.js"></script>
-		<style type="text/css">
-			.errorElement { 
-				-webkit-box-shadow: 0px 0px 2px 1px red;
-				box-shadow: 0px 0px 2px 1px red;
-			}
-		</style>
 	</head>
 	
 	<body>
-		<h3>Übersicht über Mannschaften:</h3>
-		<section>
-		<?php
-					
-			$sql = "SELECT name,
-						(SELECT name FROM division WHERE team.div_nr = division.nr) div_name
-					FROM team";
-			
-			$result = $dbConnector->performSelectQuery($sql);
-			
-			echo "<ul>";
-			while($row = mysqli_fetch_assoc($result)){
-				echo "<li>{$row['name']} ({$row['div_name']})</li>";
-			}
-			echo "</ul>";
-		
-		?>
+		<section id="editTeams" style="padding: 10px;">
+			<h3>Gewählte Mannschaften bearbeiten:</h3>
+				<table border="0" cellspacing="0" cellpadding="5px">
+				<thead>
+				<tr>
+					<th style="text-align:left">&nbsp;Name</th>
+					<th style="text-align:left">&nbsp;Spielklasse</th>
+				</tr>
+				</thead>
+				<tbody data-bind="foreach: editTeams()">
+				<tr>
+					<td><input data-bind="value: name" placeholder="Name"></td>
+					<td><select data-bind="options: $root.divisions, value: division"></select></td>
+				</tr>
+				</tbody>
+			</table>
+			<br />
+			<button>Speichern</button>&nbsp;&nbsp;
+			<button data-bind="click: cancelTeamEdit">Abbrechen</button>
 		</section>
-		<h3>Neue Mannschaften anlegen:</h3>
-		<section>
-			<!-- <form id="teamForm"> -->
-			<table border="0" cellspacing="0" cellpadding="5px">
+		<h3>Übersicht über Mannschaften:</h3>
+		<span data-bind="visible: teams().length == 0" style="padding: 10px;">Bislang sind noch keine Mannschaften eingetragen...</span>
+		<section data-bind="visible: teams().length > 0" style="padding: 10px;">
+			<table cellspacing="0" cellpadding="5px" border="0">
+				<thead>
+				<tr>
+					<th />
+					<th style="text-align:left">Name</th>
+					<th style="text-align:left">Spielklasse</th>
+				</tr>
+				</thead>
+				<tbody data-bind="foreach: teams()">
+				<tr>
+					<td><input class="teamSelectCheckbox" type="checkbox" data-bind="value: id" /></td>
+					<td><span data-bind="text: name"></td>
+					<td><span data-bind="text: division"></td>
+				</tr>
+				</tbody>
+				<tr>
+					<td colspan="3"><small><a href="#" data-bind="click: selectAllTeams">Alle</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;<a href="#" data-bind="click: deselectAllTeams">Keiner</a></small></td>
+				</tr>		
+			</table>
+			<br />
+			Auswahl:&nbsp;&nbsp;
+			<select id="editDeleteSelection">
+				<option value="edit">bearbeiten</option>
+				<option value="delete">löschen</option>
+			</select>&nbsp;
+			<button data-bind="click: performSelectedChoice, enable: teamNrToEditDelete().length > 0">OK</button><br />
+		</section>
+		<h3><a href="#" data-bind="click: showNewTeams, visible: newTeams().length == 0">Neue Mannschaften anlegen:</a></h3>
+		<h3 data-bind="visible: newTeams().length > 0">Neue Mannschaften anlegen:</h3>
+		<section id="createTeamSection" style="padding: 10px;">
+			<table cellspacing="0" cellpadding="5px">
 				<thead>
 				<tr>
 					<th style="text-align:left">&nbsp;Name</th>
@@ -49,19 +75,19 @@
 					<th />
 				</tr>
 				</thead>
-				<tbody data-bind="foreach: teams">
+				<tbody data-bind="foreach: newTeams()">
 				<tr>
 					<td><input data-bind="value: name" placeholder="Name"></td>
-					<td><select data-bind="value: division, options: $root.divisions, optionsText: 'divName', optionsCaption: 'Spielklasse wählen..'"></select></td>
-						<!-- optionsValue: 'divNr', -->
-					<td><a href="#" data-bind="click: $root.removeTeam"><small>entfernen</small></a></td>
+					<td><select data-bind="options: $root.divisions, optionsCaption: 'Spielklasse wählen..', optionsText: 'name', optionsValue: 'id'"></select>
+					</td>
+					<td><a href="#" data-bind="click: $root.removeNewTeam"><small>&raquo;&nbsp;entfernen</small></a></td>
 				</tr>
 				</tbody>
 			</table>
-			<a href="#" data-bind="click: addTeam"><small>neue Mannschaft eintragen..</small></a><br />
+			<a href="#" data-bind="click: addNewTeam"><small>&raquo;&nbsp;neue Mannschaft eintragen..</small></a><br />
 			<br />
-			<button data-bind="click: saveTeamsInDB, enable: teams().length > 0"><!--ko text: buttonLabel--><!--/ko--></button>
-			<!-- </form> -->
+			<button data-bind="click: saveNewTeamsInDB, enable: newTeams().length > 0"><!--ko text: addTeamButtonLabel--><!--/ko--></button>&nbsp;&nbsp;
+			<button data-bind="click: clearNewTeams">Abbrechen</button>
 		</section>
 	</body>
 </html>

@@ -155,7 +155,7 @@ function TeamViewModel(){
 				alert("Error:\nEine oder mehrere Mannschaften sind bereits vorhanden und können somit nicht noch einmal hinzugefügt werden!");
 			}
 		} else {
-			alert ("Error:\nEs sind nicht alle erforderlichen Felder ausgefüllt, ein Hinzufügen ist somit nicht möglich!");
+			alert ("Error:\nEs sind nicht alle erforderlichen Felder ausgefüllt!");
 		}
 	};
 	// -----------------------------------------
@@ -180,6 +180,13 @@ function TeamViewModel(){
 		}
 	});
 
+	self.elementFadeIn = function(element) {
+		$(element).hide().fadeIn();
+	};
+
+	self.elementFadeOut = function(element) {
+		$(element).fadeOut();
+	};
 
 	// get all divisions from DB with Ajax
 	self.getAllDivisionNames();
@@ -221,7 +228,8 @@ function setupKnockoutValidation(){
 	ko.validation.init({
 		insertMessages: false,
 		decorateElement: true,
-		errorElementClass: "errorElement"
+		errorElementClass: "errorElement",
+		messagesOnModified: false
 	});
 
 	// custom validation Rule

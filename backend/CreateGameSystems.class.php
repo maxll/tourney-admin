@@ -58,15 +58,15 @@ class CreateGameSystems {
     
     
     
-    public function sys_13($nr, $group_nr){
+    public function sys_13($nr, $group_id){
     	
     	if($nr <= 9){
     		$nr = "0$nr";
     	}
     	
     	// system
-    	$sql = "INSERT INTO system (nr, group_nr, name, type, nr_of_teams, nr_of_games) 
-    			VALUES (13{$nr}, $group_nr, 'Jeder gegen Jeden - 3 Mannschaften -  3 Spiele', 1, 3, 3)";
+    	$sql = "INSERT INTO system (nr, group_id, name, type, nr_of_teams, nr_of_games) 
+    			VALUES (13{$nr}, $group_id, 'Jeder gegen Jeden - 3 Mannschaften -  3 Spiele', 1, 3, 3)";
     	
     	$this->insertInto("system", $sql);
     	
@@ -88,15 +88,15 @@ class CreateGameSystems {
     }
     
     
-    function sys_14($nr, $group_nr){
+    function sys_14($nr, $group_id){
     	
     	if($nr <= 9){
     		$nr = "0$nr";
     	}
     	
     	// system
-    	$sql = "INSERT INTO system (nr, group_nr, name, type, nr_of_teams, nr_of_games) 
-    			VALUES (14{$nr}, $group_nr, 'Jeder gegen Jeden - 4 Mannschaften - 6 Spiele', 1, 4, 6)";
+    	$sql = "INSERT INTO system (nr, group_id, name, type, nr_of_teams, nr_of_games) 
+    			VALUES (14{$nr}, $group_id, 'Jeder gegen Jeden - 4 Mannschaften - 6 Spiele', 1, 4, 6)";
     	
     	$this->insertInto("system", $sql);
     	
@@ -122,15 +122,15 @@ class CreateGameSystems {
     }
     
     
-    function sys_331($nr, $group_nr){
+    function sys_331($nr, $group_id){
     	 
 //     	if($nr <= 9){
 //     		$nr = "0$nr";
 //     	}
     	 
     	// system
-    	$sql = "INSERT INTO system (nr, group_nr, name, type, nr_of_teams, nr_of_games)
-    	VALUES (331{$nr}, $group_nr, 'Finalrunde - 3 Mannschaften - 2 Spiele', 3, 3, 2)";
+    	$sql = "INSERT INTO system (nr, group_id, name, type, nr_of_teams, nr_of_games)
+    	VALUES (331{$nr}, $group_id, 'Finalrunde - 3 Mannschaften - 2 Spiele', 3, 3, 2)";
     	 
     	$this->insertInto("system", $sql);
    

@@ -39,7 +39,7 @@
 					<th style="text-align:left">Spielklasse</th>
 				</tr>
 				</thead>
-				<tbody data-bind="foreach: teams()">
+				<tbody data-bind="foreach: { data: teams(), afterAdd: elementFadeIn }">
 				<tr>
 					<td><input class="teamSelectCheckbox" type="checkbox" data-bind="value: id" onClick="controlOkButton()" /></td>
 					<td><span data-bind="text: name"></td>
@@ -69,7 +69,7 @@
 					<th />
 				</tr>
 				</thead>
-				<tbody data-bind="foreach: newTeams()">
+				<tbody data-bind="foreach: { data: newTeams(), afterAdd: elementFadeIn, beforeRemove: elementFadeOut }">
 				<tr>
 					<td><input data-bind="value: name" placeholder="Name"></td>
 					<td><select data-bind="options: $root.divisions, optionsCaption: 'Spielklasse wählen..', optionsText: 'name', optionsValue: 'id', value: divisionId"></select>

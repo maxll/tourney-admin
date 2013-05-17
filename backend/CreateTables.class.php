@@ -178,7 +178,7 @@ class CreateTables {
      			nr INT NOT NULL,
      			PRIMARY KEY(nr),
      			sys_nr INT NOT NULL,
-     			verall_nr INT,
+     			overall_nr INT,
      			slot_team1_nr INT NOT NULL,
      			slot_team2_nr INT NOT NULL,
      			slot_ref_nr INT NOT NULL,

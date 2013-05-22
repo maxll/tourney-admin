@@ -1,13 +1,11 @@
 <?php
 
 ?>
-<!DOCTYPE html>
+
 <html>
 	<head>
 		<script type="text/javascript" src="js/group.js"></script>
 	</head>
-	
-	
 	<body>
 		<h3>Übersicht über Gruppen:</h3>
 		<section style="margin-left:20px;">
@@ -25,7 +23,7 @@
 			<br /><br />
 		</section>
 		<h3>Neue Gruppe anlegen:</h3>
-		<section data-bind="visible: teams().length > 0">
+		<section>
 
 			<table cellspacing="0" cellpadding="5px" border="0">
 				<thead>
@@ -38,18 +36,17 @@
 					<tr>
 						<td>Spielklasse:</td>
 						<td>
-							<select>
-								<option>Herren LK1</option>
-								<option>Damen LK1</option>
-								<option>Junioren</option>
-							</select>
+							<select data-bind="options: divisions, optionsValue: 'id',  optionsText: 'name', value: selectedDivision, event: { onchange: checkedTeams.removeAll() }"></select>
 						</td>
 					</tr>
 					<tr>
 						<td>Einstiegsgruppe:</td>
-						<td><input type="radio" name="startgroup" checked/>ja&nbsp;<input type="radio" name="startgroup" />nein</td>
+						<td>
+							<input type="radio" id="startGroupYes" name="startGroup" value="yes" data-bind="checked: startGroupCheckState"/>ja&nbsp;
+							<input type="radio" id="startGroupNo" name="startGroup" value="no" data-bind="checked: startGroupCheckState, enable: groupSize > 0"/>nein
+						</td>
 					</tr>
-					<tr>
+					<tr id="teamCompound">
 						<td>Zusammensetzung:</td>
 						<td>
 							Plätze <input class="input_number" type="text" size="1" value="1"/>
@@ -58,33 +55,34 @@
 							&nbsp;<input type="checkbox">A</input>
 							&nbsp;<input type="checkbox">B</input>
 							&nbsp;<input type="checkbox">C</input>
-							</ul>
+						</td>
+					</tr>
+					<tr id="teamSelection" style="vertical-align: top">
+						<td>Auswahl Mannschaften:</td>
+						<td>
+							<!--ko foreach: filteredTeamsByDivision(selectedDivision())-->
+								<input type="checkbox" data-bind="value: $index, checked: $root.checkedTeams"><!--ko text: name--><!--/ko--></input><br />
+							<!--/ko-->
 						</td>
 					</tr>
 					<tr>
 						<td>Spielsystem:</td>
 						<td>
-							<select>
-								<option>Jeder gegen Jeden</option>
-								<option>Zwischenrunde</option>
-								<option>Finalrunde</option>
-							</select>
-							&nbsp;<small>(x Spiele)</small>
-						</td>
-					</tr>
-					<tr style="vertical-align: top">
-						<td>Auswahl Mannschaften:</td>
-						<td>
-							<input type="checkbox">KC Wetter</input><br />
-							<input type="checkbox">WSF Liblar</input><br />
-							<input type="checkbox">KGW Essen</input><br />
+							<select data-bind="options: filteredSystemByNrOfTeams(checkedTeamSize()), optionsValue: 'nr', optionsText: 'name', optionsCaption: 'Spielsystem wählen..', value: selectedSystem"></select>&nbsp;
+							<small>
+								<!--ko foreach: filteredSystemByNr(selectedSystem())-->
+									(<!--ko text: nr_of_games--><!--/ko--> Spiele)
+								<!--/ko-->
+							</small>
 						</td>
 					</tr>
 					<tr style="vertical-align: bottom">
 						<td>abweichende Spielzeit<br /> für diese Gruppe:</td>
-						<td><input type="radio" name="differentlength" />ja&nbsp;
-							<input type="radio" name="differentlength" checked />nein
-							&nbsp;&nbsp;<input class="input_number" type="text" size="2" value="25" /></td>
+						<td>
+							<input type="radio" id="durationYes" name="differentlength" />ja&nbsp;
+							<input type="radio" id="durationNo" name="differentlength" checked />nein
+							&nbsp;&nbsp;<input class="input_number" id="durationMin" type="text" size="2" value="25" disabled />&nbsp;Minuten
+						</td>
 					</tr>
 					<tr>
 						<td></td>
@@ -92,9 +90,9 @@
 					</tr>
 				</tbody>
 			</table>
-			
+		</section>	
 		<section>					
-			<button>Gruppe anlegen</button>
+			<button data-bind="enable: requirementsFulfilled">Gruppe anlegen</button>
 			<p><br /><br /><br /></p>
 		</section>
 	</body>

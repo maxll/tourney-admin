@@ -6,7 +6,7 @@ function TeamViewModel(){
 
 	var self = this;
 
-	self.divisions = [];
+	self.divisions = ko.observableArray([]);
 
 	self.getAllDivisionNames = function() {
 
@@ -32,7 +32,7 @@ function TeamViewModel(){
 			var parsed =  JSON.parse(data);
 
 			for (var i = 0; i < parsed.teams.length; i++) {
-				self.teams.push(new Team(parsed.teams[i].team_id, parsed.teams[i].team_name, parsed.teams[i].div_name));
+				self.teams.push(new Team(parsed.teams[i].id, parsed.teams[i].name, parsed.teams[i].div_id));
 			}
 			self.deselectAllTeams();
 		});
@@ -202,9 +202,9 @@ function Team(id, name, initialDivisionId){
 	self.divisionId = ko.observable(initialDivisionId).extend({ required: true });
 	self.divisionName = ko.computed(function() {
 
-		for(var i = 0; i < teamViewModel().divisions.length; i++){
-			if(self.divisionId() == teamViewModel().divisions[i].id){
-				return teamViewModel().divisions[i].name;
+		for(var i = 0; i < teamViewModel().divisions().length; i++){
+			if(self.divisionId() == teamViewModel().divisions()[i].id){
+				return teamViewModel().divisions()[i].name;
 			}
 		}
 	});

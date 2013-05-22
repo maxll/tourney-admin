@@ -25,6 +25,12 @@ $dbAccess = new MySQL_Access();
 			case 'getAllDivisionNames':
 				getAllDivisionNames();
 				break;
+			case 'getAllSystems':
+				getAllSystems();
+				break;
+			case 'getAllGroups':
+				getAllGroups();
+				break;
 			}
 		}
 	}
@@ -101,8 +107,7 @@ function getAllTeams(){
 
 	$teams = $dbAccess->selectAllTeams();
 
-	$teams = json_encode($teams);
-	
+	$teams = json_encode($teams);	
 	$teams = json_encode("{ \"teams\" : $teams}");
 	
 	echo $teams;
@@ -110,17 +115,43 @@ function getAllTeams(){
 }
 
 function getAllDivisionNames(){
+	
 	global $dbAccess;
-
 	$divisions = array();
 
-	$divisions = $dbAccess->selectAllDivisionNames();
+	$divisions = $dbAccess->selectAllDivisions();
 
 	$divisions = json_encode($divisions);
-
 	$divisions = json_encode("{ \"divisions\" : $divisions}");
 
 	echo $divisions;
+}
+
+
+function getAllSystems(){
+	global $dbAccess;
+	$systems = array();
+
+	$systems = $dbAccess->selectAllSystems();
+
+	$systems = json_encode($systems);
+	$systems = json_encode("{ \"systems\" : $systems}");
+
+	echo $systems;
+}
+
+
+function getAllGroups(){
+
+	global $dbAccess;
+	$groups = array();
+
+	$groups = $dbAccess->selectAllGroups();
+
+	$groups = json_encode($groups);
+	$groups = json_encode("{ \"groups\" : $groups}");
+
+	echo $groups;
 }
 
 ?>

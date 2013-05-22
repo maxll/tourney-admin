@@ -21,8 +21,6 @@ class CreateTables {
  		$this->groupsystem();
  		$this->game();
  		$this->slot();
- 		
- 		$this->dropTable("groups");
     	
  		$this->output .= "</ul>";
     }
@@ -100,7 +98,7 @@ class CreateTables {
      			defeats INT DEFAULT 0,
      			points INT DEFAULT 0,
      			goals_scored INT DEFAULT 0,
-     			golas_received INT DEFAULT 0,
+     			goals_received INT DEFAULT 0,
     			goaldiff INT DEFAULT 0, 
                 rank INT DEFAULT 0,
                 PRIMARY KEY(id), 
@@ -109,7 +107,43 @@ class CreateTables {
 		$this->dropTable($table);
 		$this->createTable($table, $sql);
     }
-    
+
+   /* Begin
+set new.goaldiff = new.goals_scored - new.golas_received;
+set new.points = 
+new.wins * (select (@pwin:=division.points_win), (@pdraw:=division.points_draw)
+from stats_per_group
+left outer join team on stats_per_group.team_id = team.id
+left outer join division on team.div_id = division.id)
++ new.draws * (select division.points_draw
+from stats_per_group
+left outer join team on stats_per_group.team_id = team.id
+left outer join division on team.div_id = division.id)
++ new.defeats * (select division.points_defeat
+from stats_per_group
+left outer join team on stats_per_group.team_id = team.id
+left outer join division on team.div_id = division.id);
+END*/
+
+/*
+Begin
+DECLARE pwin INT;
+DECLARE pdraw INT;
+DECLARE pdefeat INT;
+
+select division.points_win, division.points_draw, division.points_defeat
+into pwin, pdraw, pdefeat
+from stats_per_group
+left outer join team on stats_per_group.team_id = team.id
+left outer join division on team.div_id = division.id;
+
+set new.goaldiff = new.goals_scored - new.golas_received;
+set new.points = 
+new.wins * pwin
++ new.draws * pdraw
++ new.defeats * pdefeat;
+END
+ */
     
     private function group(){
     	
@@ -199,7 +233,7 @@ class CreateTables {
     	$sql = "CREATE TABLE $table (
     			nr INT NOT NULL,
     			PRIMARY KEY(nr),
-    			team_name varchar(50),
+    			team_id INT,
     			name varchar(50))";
     	
     	$this->dropTable($table);

@@ -124,36 +124,117 @@ class MySQL_Access implements Data_Access {
 
 		$teams = array();
 
-		$sql = "SELECT team.name as teamName, team.id as teamId, division.id as divName
-				FROM team
-				LEFT OUTER JOIN division 
-				ON team.div_id = division.id";
+		$sql = "SELECT id, name, div_id FROM team";
 
 		$result = $this->performSelectQuery($sql);
 		while($row = mysqli_fetch_assoc($result)) {
 
-			array_push($teams, array('team_id' => $row['teamId'], 'team_name' => $row['teamName'], 'div_name' => $row['divName']));
+			array_push($teams, array(	'id' => $row['id'],
+										'name' => $row['name'],
+										'div_id' => $row['div_id']));
 		} 
 
 		return $teams;
 	}
 
 
-	public function selectAllDivisionNames(){
+	public function selectAllDivisions(){
 
 		$divisions = array();
 
-		$sql = "SELECT id, name from division";
+		$sql = "SELECT id, name, game_length, points_win, points_draw, points_defeat FROM division";
 
 		$result = $this->performSelectQuery($sql);
 		while($row = mysqli_fetch_assoc($result)) {	
 
-			array_push($divisions, array('id' => $row['id'], 'name' => $row['name']));
+			array_push($divisions, array(	'id' => $row['id'],
+											'name' => $row['name'],
+											'game_length' => $row['game_length'],
+											'points_win' => $row['points_win'],
+											'points_draw' => $row['points_draw'],
+											'points_defeat' => $row['points_defeat']));
 		}
 		
 		return $divisions;	
 	}
 
+
+	public function selectAllSystems(){
+
+		$systems = array();
+
+		$sql = "SELECT nr, group_id, name, type, nr_of_games, nr_of_teams FROM system";
+
+		$result = $this->performSelectQuery($sql);
+		while($row = mysqli_fetch_assoc($result)) {
+
+			array_push($systems, array(	'nr' => $row['nr'],
+										'group_id' => $row['group_id'],
+										'name' => $row['name'],
+										'type' => $row['type'],
+										'nr_of_games' => $row['nr_of_games'],
+										'nr_of_teams' => $row['nr_of_teams']));
+		}
+
+		return $systems;
+	}
+
+
+	public function selectAllGroups() {
+
+		$groups = array();
+
+		$sql = "SELECT id, name, div_id, sys_nr, startgroup, modified_game_length FROM `group`";
+
+		$result = $this->performSelectQuery($sql);
+		while($row = mysqli_fetch_assoc($result)) {
+
+			array_push($groups, array(	'nr' => $row['nr'],
+										'name' => $row['name'],
+										'div_id' => $row['div_id'],
+										'sys_nr' => $row['sys_nr'],
+										'startgroup' => $row['startgroup'],
+										'modified_game_length' => $row['modified_game_length']));
+		}
+
+		return $groups;
+	}
+
+
+	public function selectAllStatsPerGroup(){
+
+		$stats = array();
+
+		$sql = "SELECT id, team_id, group_id, wins, draws, defeats, points, goals_scored, goals_received, goaldiff, rank
+				FROM stats_per_group";
+
+		$result = $this->performSelectQuery($sql);
+		while($row = mysqli_fetch_assoc($result)) {
+
+			array_push($stats, array(	'id' => $row['id'],
+										'team_id' => $row['team_id'],
+										'group_id' => $row['group_id'],
+										'wins' => $row['wins'],
+										'draws' => $row['draws'],
+										'defeats' => $row['defeats'],
+										'points' => $row['points'],
+										'goals_scored' => $row['goals_scored'],
+										'goals_received' => $row['goals_received'],
+										'goaldiff' => $row['goaldiff'],
+										'rank' => $row['rank']));
+		}
+
+		return $stats;
+	}
+
+/*
+delimiter //
+create trigger calculate_stats before insert on stats_per_group
+for each row
+begin
+set new.goaldiff = goals_scored - goals_received;
+end;//
+*/
 
 	public function performSelectQuery($sql){
 		

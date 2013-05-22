@@ -13,6 +13,8 @@ class CreateGameSystems {
      	$this->sys_13(0,0);
      	$this->sys_14(0,0);
     	$this->sys_331(0,0);
+
+        $this->insertTestData();
     	
     	$this->output .= "</ul>";
     }
@@ -57,6 +59,33 @@ class CreateGameSystems {
     }
     
     
+    public function insertTestData(){
+
+        $sql = "INSERT INTO division (id, name)
+                VALUES (1, 'Herren LK1'), (2, 'Herren LK2'), (3, 'Damen LK1')";
+        $this->insertInto("division", $sql);
+
+        $sql = "INSERT INTO team (name, div_id)
+                VALUES  ('KC Wetter', 1), 
+                        ('WSF Liblar', 1),
+                        ('KGW Essen', 1),
+                        ('Deventer KV', 1),
+                        ('Rothe Mühle Essen', 1),
+                        ('Michel de Ruyter', 1),
+                        ('KCNW Berlin', 1),
+                        ('VK Berlin', 1),
+                        
+                        ('KC Wetter', 2),
+                        ('WSF Liblar', 2),
+                        ('MKSF Mühlheim', 2),
+                        ('KC Radolfzell', 2),
+                        ('SKC Philippsburg', 2),
+                        ('SKG Hanau', 2),
+
+                        ('Test', 3),
+                        ('Test2', 3)";
+        $this->insertInto("team", $sql);
+    }
     
     public function sys_13($nr, $group_id){
     	
@@ -71,7 +100,7 @@ class CreateGameSystems {
     	$this->insertInto("system", $sql);
     	
     	// slot
-		$sql = "INSERT INTO slot (nr, team_name, name) 
+		$sql = "INSERT INTO slot (nr, team_id, name) 
 				VALUES  (13{$nr}01, null, 'Team A'),
 					 	(13{$nr}02, null, 'Team B'),
 						(13{$nr}03, null, 'Team C')";
@@ -101,7 +130,7 @@ class CreateGameSystems {
     	$this->insertInto("system", $sql);
     	
     	// slot
-		$sql = "INSERT INTO slot (nr, team_name, name) 
+		$sql = "INSERT INTO slot (nr, team_id, name) 
 				VALUES  (14{$nr}01, null, 'Team A'),
 					 	(14{$nr}02, null, 'Team B'),
 						(14{$nr}03, null, 'Team C'),
@@ -130,12 +159,12 @@ class CreateGameSystems {
     	 
     	// system
     	$sql = "INSERT INTO system (nr, group_id, name, type, nr_of_teams, nr_of_games)
-    	VALUES (331{$nr}, $group_id, 'Finalrunde - 3 Mannschaften - 2 Spiele', 3, 3, 2)";
+    	VALUES (331{$nr}, $group_id, 'Finalrunde 3/1', 3, 3, 2)";
     	 
     	$this->insertInto("system", $sql);
    
     	// slot
-    	$sql = "INSERT INTO slot (nr, team_name, name)
+    	$sql = "INSERT INTO slot (nr, team_id, name)
     	VALUES  (331{$nr}01, null, 'Team A'),
     			(331{$nr}02, null, 'Team B'),
     			(331{$nr}03, null, 'Team C'),

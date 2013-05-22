@@ -7,7 +7,13 @@ interface Data_Access{
 	public function deleteTeams($teams);
 	public function selectAllTeams();
 
-	public function selectAllDivisionNames();
+	public function selectAllDivisions();
+	
+	public function selectAllSystems();
+
+	public function selectAllGroups();
+
+	public function selectAllStatsPerGroup();
 }
 
 

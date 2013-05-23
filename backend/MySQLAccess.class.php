@@ -1,8 +1,8 @@
 <?php
 
-require_once 'Data_Access.interface.php';
+require_once 'DataAccess.interface.php';
 
-class MySQL_Access implements Data_Access {
+class MySQLAccess implements DataAccess {
 	
 	private $host = "127.0.0.1";
 	// private $host = "localhost";

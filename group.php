@@ -61,7 +61,7 @@
 						<td>Auswahl Mannschaften:</td>
 						<td>
 							<!--ko foreach: filteredTeamsByDivision(selectedDivision())-->
-								<input type="checkbox" data-bind="value: $index, checked: $root.checkedTeams"><!--ko text: name--><!--/ko--></input><br />
+								<input type="checkbox" data-bind="value: id, checked: $root.checkedTeams"><!--ko text: name--><!--/ko--></input><br />
 							<!--/ko-->
 						</td>
 					</tr>

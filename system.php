@@ -52,13 +52,13 @@
 				    	 		$sql = "SELECT * FROM system WHERE type=$nr ORDER BY type";
 				    	 		$result = $dbConnector->performSelectQuery($sql);
 				    	 		while($row = mysqli_fetch_array($result)){
-				    	 			echo "<option value=\"{$row['nr']}\">{$row['name']}</option>";
+				    	 			echo "<option value=\"{$row['nr']}\">{$row['name']} - {$row['nr_of_teams']} Teams - {$row['nr_of_games']} - Spiele</option>";
 				    	 		}
 							} else { 
 								$sql = "SELECT * FROM system ORDER BY type";
 								$result = $dbConnector->performSelectQuery($sql);
 								while($row = mysqli_fetch_array($result)){
-									echo "<option value=\"{$row['nr']}\">{$row['name']}</option>";
+									echo "<option value=\"{$row['nr']}\">{$row['name']} - {$row['nr_of_teams']} Teams - {$row['nr_of_games']} Spiele</option>";
 								}
 							}
 				    	?>

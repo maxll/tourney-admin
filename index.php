@@ -1,8 +1,8 @@
 <?php
 
-require_once '/backend/MySQL_Access.class.php';
+require_once '/backend/MySQLAccess.class.php';
 
-$dbConnector = new MySQL_Access();
+$dbConnector = new MySQLAccess();
 $connection = $dbConnector->getConnection();
 ?>
 
@@ -12,7 +12,7 @@ $connection = $dbConnector->getConnection();
 		<!-- <title>Turnierplan - Verwaltung</title>-->
 		<link rel="stylesheet" type="text/css" href="css/general.css" />
 		<script type="text/javascript" src="js/frameworks/knockout-2.2.1.min.js"></script>
-		<script type="text/javascript" src="js/frameworks/knockout-mapping-2.4.1.min.js"></script>
+		<!-- <script type="text/javascript" src="js/frameworks/knockout-mapping-2.4.1.min.js"></script> -->
 		<script type="text/javascript" src="js/frameworks/knockout.validation.min.js"></script>
 		<script type="text/javascript" src="js/frameworks/jquery-2.0.0.min.js"></script>
 	</head>

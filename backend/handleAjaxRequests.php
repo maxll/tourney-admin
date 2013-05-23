@@ -1,8 +1,8 @@
 <?php
 
-require_once 'MySQL_Access.class.php';
+require_once 'MySQLAccess.class.php';
 
-$dbAccess = new MySQL_Access();
+$dbAccess = new MySQLAccess();
 
 
 	// echo "POST:";

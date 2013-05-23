@@ -1,7 +1,7 @@
 <?php
   
-require_once '/backend/CreateTables.class.php';
-require_once '/backend/CreateGameSystems.class.php';
+require_once '/backend/CreateDBStructure.class.php';
+require_once '/backend/InsertDBContent.class.php';
 
 ?>
 
@@ -66,8 +66,8 @@ require_once '/backend/CreateGameSystems.class.php';
 				if (isset($_GET['function'])){
 					switch($_GET['function']){
 						case "buildDb": {
-							$createTables = new CreateTables($connection);
-							echo $createTables;
+							$createDBStructure = new CreateDBStructure($connection);
+							echo $createDBStructure;
 							break;
 						}
 						case "deleteTeams":{
@@ -85,8 +85,8 @@ require_once '/backend/CreateGameSystems.class.php';
 							break;
 						}
 						case "insertSystems": {
-							$createGameSystems = new CreateGameSystems($connection);
-							echo $createGameSystems;
+							$insertDBContent = new InsertDBContent($connection);
+							echo $insertDBContent;
 							break;
 						}
 						case "deleteSystems": {

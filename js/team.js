@@ -17,7 +17,6 @@ function TeamViewModel(){
 			for(var i = 0; i < parsed.divisions.length; i++){
 				self.divisions.push({id: parsed.divisions[i].id, name: parsed.divisions[i].name});
 			}
-
 		});
 	};
 
@@ -35,6 +34,12 @@ function TeamViewModel(){
 				self.teams.push(new Team(parsed.teams[i].id, parsed.teams[i].name, parsed.teams[i].div_id));
 			}
 			self.deselectAllTeams();
+		});
+	};
+
+	self.filteredTeamsByDivision = function(div_id) {
+		return ko.utils.arrayFilter(self.teams(), function(team) {
+			return (team.divisionId() == div_id);
 		});
 	};
 	// -----------------------------------------

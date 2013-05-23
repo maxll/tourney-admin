@@ -37,8 +37,9 @@ function GroupViewModel(){
 			var parsed =  JSON.parse(data);
 
 			for (var i = 0; i < parsed.teams.length; i++) {
-				self.teams.push({ id: parsed.teams[i].team_id, name: parsed.teams[i].team_name, div_id: parsed.teams[i].div_id});
+				self.teams.push({ id: parsed.teams[i].id, name: parsed.teams[i].name, div_id: parsed.teams[i].div_id});
 			}
+			console.log(self.teams()[1].name);
 		});
 	};
 
@@ -200,10 +201,8 @@ $(document).ready(function(){
 <!--/ko-->
 
 
-<!--ko foreach: _.filter(teams(), function(item) { return item.div_id == selectedDivision();})-->
-
 <!--ko foreach: filteredTeamsByDivision(selectedDivision())-->
-								
+					
 	<input type="checkbox"><!--ko text: name--><!--/ko--></input><br />
 	
 <!--/ko-->

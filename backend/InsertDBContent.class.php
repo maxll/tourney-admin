@@ -1,6 +1,6 @@
 <?php
 
-class CreateGameSystems {
+class InsertDBContent {
 
 	private $connection = "";
 	private $output = "";
@@ -95,7 +95,7 @@ class CreateGameSystems {
     	
     	// system
     	$sql = "INSERT INTO system (nr, group_id, name, type, nr_of_teams, nr_of_games) 
-    			VALUES (13{$nr}, $group_id, 'Jeder gegen Jeden - 3 Mannschaften -  3 Spiele', 1, 3, 3)";
+    			VALUES (13{$nr}, $group_id, 'Jeder gegen Jeden', 1, 3, 3)";
     	
     	$this->insertInto("system", $sql);
     	
@@ -125,7 +125,7 @@ class CreateGameSystems {
     	
     	// system
     	$sql = "INSERT INTO system (nr, group_id, name, type, nr_of_teams, nr_of_games) 
-    			VALUES (14{$nr}, $group_id, 'Jeder gegen Jeden - 4 Mannschaften - 6 Spiele', 1, 4, 6)";
+    			VALUES (14{$nr}, $group_id, 'Jeder gegen Jeden', 1, 4, 6)";
     	
     	$this->insertInto("system", $sql);
     	

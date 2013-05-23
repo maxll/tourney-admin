@@ -1,6 +1,6 @@
 <?php
 
-class CreateTables {
+class CreateDBStructure {
 
 	private $connection = "";
 	private $output = "";
@@ -12,6 +12,7 @@ class CreateTables {
  		$this->output = "<h2>Trying to create tables now...</h2>";
  		$this->output .= "<ul>";
  		
+        // tables
  		$this->division();
  		$this->team();
  		$this->player();
@@ -21,8 +22,55 @@ class CreateTables {
  		$this->groupsystem();
  		$this->game();
  		$this->slot();
+
+        //trigger
+        $this->calculate_points_goalDiff_rank();
     	
  		$this->output .= "</ul>";
+    }
+
+
+    private function calculate_points_goalDiff_rank(){
+
+        /*$trigger = "calculate_points_goalDiff_rank";
+
+        $sql = "CREATE TRIGGER $trigger BEFORE INSERT ON stats_per_group
+                FOR EACH ROW
+                BEGIN
+                DECLARE pwin int;
+                DECLARE pdraw int;
+                DECLARE pdefeat int;
+                SELECT division.points_win, division.points_draw, division.points_defeat
+                INTO pwin, pdraw, pdefeat
+                FROM stats_per_group
+                LEFT OUTER JOIN team ON stats_per_group.team_id = team.id
+                LEFT OUTER JOIN division ON team.div_id = division.id;
+                SET new.points = new.wins * pwin + new.draws * pdraw + new.defeats * pdefeat;
+                SET new.goaldiff = new.goals_scored - new.goals_received;
+                END";
+
+        $this->dropTrigger($trigger);
+        $this->createTrigger($trigger, $sql);*/
+
+        $trigger = "calculate_points_goalDiff_rank_update";
+
+        $sql = "CREATE TRIGGER $trigger BEFORE UPDATE ON stats_per_group
+                FOR EACH ROW
+                BEGIN
+                DECLARE pwin int;
+                DECLARE pdraw int;
+                DECLARE pdefeat int;
+                SELECT division.points_win, division.points_draw, division.points_defeat
+                INTO pwin, pdraw, pdefeat
+                FROM stats_per_group
+                LEFT OUTER JOIN team ON stats_per_group.team_id = team.id
+                LEFT OUTER JOIN division ON team.div_id = division.id;
+                SET new.points = new.wins * pwin + new.draws * pdraw + new.defeats * pdefeat;
+                SET new.goaldiff = new.goals_scored - new.goals_received;
+                END";
+
+        $this->dropTrigger($trigger);
+        $this->createTrigger($trigger, $sql);
     }
     
     
@@ -108,42 +156,6 @@ class CreateTables {
 		$this->createTable($table, $sql);
     }
 
-   /* Begin
-set new.goaldiff = new.goals_scored - new.golas_received;
-set new.points = 
-new.wins * (select (@pwin:=division.points_win), (@pdraw:=division.points_draw)
-from stats_per_group
-left outer join team on stats_per_group.team_id = team.id
-left outer join division on team.div_id = division.id)
-+ new.draws * (select division.points_draw
-from stats_per_group
-left outer join team on stats_per_group.team_id = team.id
-left outer join division on team.div_id = division.id)
-+ new.defeats * (select division.points_defeat
-from stats_per_group
-left outer join team on stats_per_group.team_id = team.id
-left outer join division on team.div_id = division.id);
-END*/
-
-/*
-Begin
-DECLARE pwin INT;
-DECLARE pdraw INT;
-DECLARE pdefeat INT;
-
-select division.points_win, division.points_draw, division.points_defeat
-into pwin, pdraw, pdefeat
-from stats_per_group
-left outer join team on stats_per_group.team_id = team.id
-left outer join division on team.div_id = division.id;
-
-set new.goaldiff = new.goals_scored - new.golas_received;
-set new.points = 
-new.wins * pwin
-+ new.draws * pdraw
-+ new.defeats * pdefeat;
-END
- */
     
     private function group(){
     	
@@ -241,6 +253,23 @@ END
     }
     
     
+    private function dropTrigger($trigger){
+        if (mysqli_query($this->connection, "DROP TRIGGER IF EXISTS $trigger")){
+            $this->output .= "<li>Table <strong>$trigger</strong> dropped successfully</li>";
+        } else {
+            $this->output .= "<li>Error dropping table <strong>$trigger</strong>: " . mysqli_error($this->connection) . "</li>";
+        }
+    }
+
+    private function createTrigger($trigger, $sql){
+        
+        if (mysqli_query($this->connection, $sql)){
+            $this->output .= "<li>Trigger <strong>$trigger</strong> is created successfully</li>";
+        } else {
+            $this->output .= "<li>Error creating trigger <strong>$trigger</strong>: " . mysqli_error($this->connection) . "</li>";
+        }
+    }
+
     private function dropTable($table){
     	
     	if (mysqli_query($this->connection, "DROP TABLE IF EXISTS $table")){

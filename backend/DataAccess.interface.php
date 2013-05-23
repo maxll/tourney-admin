@@ -1,6 +1,6 @@
 <?php
 
-interface Data_Access{
+interface DataAccess{
 	
 	public function insertTeams($teams);
 	public function updateTeams($teams);

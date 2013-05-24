@@ -8,11 +8,11 @@ function TeamViewModel(){
 
 	self.divisions = ko.observableArray([]);
 
-	self.getAllDivisionNames = function() {
+	self.getAllDivisions = function() {
 
-		$.getJSON("backend/handleAjaxRequests.php", {getAllDivisionNames : 1}, function(data) {
+		$.getJSON("backend/handleAjaxRequests.php", {getAllDivisions : 1}, function(returnedData) {
 
-			var parsed = JSON.parse(data);
+			var parsed = JSON.parse(returnedData);
 
 			for(var i = 0; i < parsed.divisions.length; i++){
 				self.divisions.push({id: parsed.divisions[i].id, name: parsed.divisions[i].name});
@@ -26,9 +26,9 @@ function TeamViewModel(){
 	self.getAllTeams = function() {
 		self.teams.removeAll();
 
-		$.getJSON("backend/handleAjaxRequests.php", {getAllTeams: 1}, function(data) {
+		$.getJSON("backend/handleAjaxRequests.php", {getAllTeams: 1}, function(returnedData) {
 
-			var parsed =  JSON.parse(data);
+			var parsed =  JSON.parse(returnedData);
 
 			for (var i = 0; i < parsed.teams.length; i++) {
 				self.teams.push(new Team(parsed.teams[i].id, parsed.teams[i].name, parsed.teams[i].div_id));
@@ -86,7 +86,7 @@ function TeamViewModel(){
 		self.deselectAllTeams();
 		$("#editDeleteSelection").val("edit");
 
-		$.post("backend/handleAjaxRequests.php", {deleteTeams: jsonTeamData}, function(data) {
+		$.post("backend/handleAjaxRequests.php", {deleteTeams: jsonTeamData}, function(returnedData) {
 			self.getAllTeams();
 		});
 	};
@@ -95,7 +95,7 @@ function TeamViewModel(){
 
 		var jsonTeamData = ko.toJSON({teams: self.editTeams()});
 
-		$.post("backend/handleAjaxRequests.php", {updateTeams: jsonTeamData}, function(data) {
+		$.post("backend/handleAjaxRequests.php", {updateTeams: jsonTeamData}, function(returnedData) {
 			self.editTeams.removeAll();
 			$("#editTeams").slideUp();
 			self.getAllTeams();
@@ -125,6 +125,7 @@ function TeamViewModel(){
 
 	self.addNewTeam = function() {
 		self.newTeams.push(new Team("", ""));
+		self.scrollDown();
 	};
 
 	self.removeNewTeam = function(team) {
@@ -140,6 +141,12 @@ function TeamViewModel(){
 	self.showNewTeams = function() {
 		self.newTeams.push(new Team("", "", ""));
 		$("#createTeamSection").slideDown();
+		// $("html, body").animate({ scrollTop: $("#createTeamSection").offset().top }, 1000);
+		self.scrollDown();
+	};
+
+	self.scrollDown = function() {
+		$("html, body").animate({ scrollTop: $("#createTeamSection").offset().top }, 1000);
 	};
 
 	self.saveNewTeamsInDB = function() {
@@ -152,7 +159,7 @@ function TeamViewModel(){
 
 				var jsonTeamData = ko.toJSON({teams: self.newTeams()});
 
-				$.post("backend/handleAjaxRequests.php", {insertNewTeams: jsonTeamData}, function(data) {
+				$.post("backend/handleAjaxRequests.php", {insertNewTeams: jsonTeamData}, function(returnedData) {
 					self.getAllTeams();
 					self.clearNewTeams();
 				});
@@ -194,7 +201,7 @@ function TeamViewModel(){
 	};
 
 	// get all divisions from DB with Ajax
-	self.getAllDivisionNames();
+	self.getAllDivisions();
 
 	// get all teams from DB with Ajax
 	self.getAllTeams();

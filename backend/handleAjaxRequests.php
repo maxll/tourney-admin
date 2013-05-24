@@ -20,16 +20,24 @@ $dbAccess = new MySQLAccess();
 
 			switch($key) {
 			case 'getAllTeams':
-				getAllTeams();
+				// getAllTeams();
+				getData('teams');
 				break;
-			case 'getAllDivisionNames':
-				getAllDivisionNames();
+			case 'getAllDivisions':
+				// getAllDivisions();
+				getData('divisions');
 				break;
 			case 'getAllSystems':
-				getAllSystems();
+				// getAllSystems();
+				getData('systems');
 				break;
 			case 'getAllGroups':
-				getAllGroups();
+				// getAllGroups();
+				getData('groups');
+				break;
+			case 'getAllStats':
+				// getAllStats();
+				getData('stats');
 				break;
 			}
 		}
@@ -100,7 +108,7 @@ function deleteTeams($jsonTeamIdData){
 }
 
 
-function getAllTeams(){
+/*function getAllTeams(){
 
 	global $dbAccess;
 	$teams = array();
@@ -114,7 +122,7 @@ function getAllTeams(){
 
 }
 
-function getAllDivisionNames(){
+function getAllDivisions(){
 	
 	global $dbAccess;
 	$divisions = array();
@@ -152,6 +160,48 @@ function getAllGroups(){
 	$groups = json_encode("{ \"groups\" : $groups}");
 
 	echo $groups;
+}
+
+function getAllStats(){
+
+	global $dbAccess;
+	$stats = array();
+
+	$stats = $dbAccess->selectAllStatsPerGroup();
+
+	$stats = json_encode($stats);
+	$stats = json_encode("{ \"stats\" : $stats}");
+
+	echo $stats;
+}*/
+
+function getData($dataName){
+
+	global $dbAccess;
+	$return = array();
+
+	switch ($dataName) {
+		case 'teams':
+			$return = $dbAccess->selectAllTeams();
+			break;
+		case 'divisions':
+			$return = $dbAccess->selectAllDivisions();
+			break;
+		case 'systems':
+			$return = $dbAccess->selectAllSystems();
+			break;
+		case 'groups':
+			$return = $dbAccess->selectAllGroups();
+			break;
+		case 'stats':
+			$return = $dbAccess->selectAllStatsPerGroup();
+			break;
+	}
+
+	$return = json_encode($return);
+	$return = json_encode("{ \"$dataName\" : $return}");
+
+	echo $return;
 }
 
 ?>

@@ -6,40 +6,39 @@ function GroupViewModel(){
 
 	var self = this;
 
-	// Divisions
+	// divisions
 	// ----------
 	self.divisions = ko.observableArray([]);
 
 	self.selectedDivision = ko.observable();
 
-	self.getAllDivisionNames = function() {
+	self.getAllDivisions = function() {
 		self.divisions.removeAll();
 
-		$.getJSON("backend/handleAjaxRequests.php", {getAllDivisionNames : 1}, function(data) {
+		$.getJSON("backend/handleAjaxRequests.php", {getAllDivisions : 1}, function(returnedData) {
 
-			var parsed = JSON.parse(data);
+			var parsed = JSON.parse(returnedData);
 
-			for(var i = 0; i < parsed.divisions.length; i++){
+			for(var i = 0; i < parsed.divisions.length; i++) {
 				self.divisions.push({id: parsed.divisions[i].id, name: parsed.divisions[i].name});
 			}
 		});
 	};
 
-	// Teams
+	// teams
 	// ----------
 	self.teams = ko.observableArray([]);
 
 	self.getAllTeams = function() {
 		self.teams.removeAll();
 
-		$.getJSON("backend/handleAjaxRequests.php", {getAllTeams: 1}, function(data) {
+		$.getJSON("backend/handleAjaxRequests.php", {getAllTeams: 1}, function(returnedData) {
 
-			var parsed =  JSON.parse(data);
+			var parsed =  JSON.parse(returnedData);
 
 			for (var i = 0; i < parsed.teams.length; i++) {
 				self.teams.push({ id: parsed.teams[i].id, name: parsed.teams[i].name, div_id: parsed.teams[i].div_id});
 			}
-			console.log(self.teams()[1].name);
 		});
 	};
 
@@ -49,7 +48,7 @@ function GroupViewModel(){
 		});
 	};
 
-	// Systems
+	// systems
 	// ----------
 
 	self.systems = ko.observableArray([]);
@@ -71,9 +70,9 @@ function GroupViewModel(){
 	self.getAllSystems = function() {
 		self.systems.removeAll();
 
-		$.getJSON("backend/handleAjaxRequests.php", {getAllSystems: 1}, function(data) {
+		$.getJSON("backend/handleAjaxRequests.php", {getAllSystems: 1}, function(returnedData) {
 
-			var parsed = JSON.parse(data);
+			var parsed = JSON.parse(returnedData);
 
 			for (var i = 0; i < parsed.systems.length; i++) {
 				self.systems.push({ nr: parsed.systems[i].nr,
@@ -87,7 +86,7 @@ function GroupViewModel(){
 	};
 
 
-	// Groups
+	// groups
 	// ----------
 
 	self.groups = ko.observableArray([]);
@@ -99,9 +98,9 @@ function GroupViewModel(){
 	self.getAllGroups = function() {
 		self.groups.removeAll();
 
-		$.getJSON("backend/handleAjaxRequests.php", {getAllGroups : 1}, function(data){
+		$.getJSON("backend/handleAjaxRequests.php", {getAllGroups : 1}, function(returnedData){
 
-			var parsed = JSON.parse(data);
+			var parsed = JSON.parse(returnedData);
 
 			for(var i = 0; i < parsed.groups.length; i++) {
 				self.groups.push({	id: parsed.groups[i].id,
@@ -111,9 +110,30 @@ function GroupViewModel(){
 									startgroup: parsed.groups[i].startgroup,
 									modified_game_length: parsed.groups[i].modified_game_length });
 			}
-
 		});
 	};
+
+
+	// stats_per_group
+	// -----------------
+
+	self.stats = ko.observableArray([]);
+
+	self.getAllStats = function() {
+		self.stats.removeAll();
+
+		$.getJSON("backend/handleAjaxRequests.php", {getAllStats : 1}, function(returnedData){
+
+			var parsed = JSON.parse(returnedData);
+
+			for(var i = 0; i < parsed.stats.length; i++) {
+				self.stats.push({	id: parsed.stats[i].id,
+									team_id: parsed.stats[i].team_id,
+									group_id: parsed.stats[i].group_id });
+			}
+		});
+	};
+
 
 
 	// Control UI
@@ -145,7 +165,7 @@ function GroupViewModel(){
 
 
 	// fill model
-	self.getAllDivisionNames();
+	self.getAllDivisions();
 	self.getAllSystems();
 	self.getAllGroups();
 

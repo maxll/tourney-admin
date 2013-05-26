@@ -2,8 +2,8 @@
 
 require_once '/backend/MySQLAccess.class.php';
 
-$dbConnector = new MySQLAccess();
-$connection = $dbConnector->getConnection();
+$dbAccess = new MySQLAccess();
+$connection = $dbAccess->getConnection();
 ?>
 
 <!DOCTYPE html>

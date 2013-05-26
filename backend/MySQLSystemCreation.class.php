@@ -1,6 +1,6 @@
 <?php
 
-class InsertDBContent {
+class MySQLSystemCreation {
 
 	private $connection = "";
 	private $output = "";
@@ -9,14 +9,6 @@ class InsertDBContent {
     	
     	$this->connection = $connection;
     	
-    	$this->output .= "<ul>";
-     	$this->sys_13(0,0);
-     	$this->sys_14(0,0);
-    	$this->sys_331(0,0);
-
-        $this->insertTestData();
-    	
-    	$this->output .= "</ul>";
     }
     
     /*	Vorrunde:
@@ -49,15 +41,17 @@ class InsertDBContent {
      *  
      */
     
-    private function insertInto($table, $sql){
-    	
-    	if (mysqli_query($this->connection, $sql)){
-    		$this->output .= "<li>INSERT INTO <strong>$table</strong> was successfull</li>";
-    	} else {
-    		$this->output .= "<li>Error in INSERT INTO <strong>$table</strong>: " . mysqli_error($this->connection) . "</li>";
-    	}
+    public function insertSystems(){
+        $this->output .= "<ul>";
+        $this->sys_13(0,0);
+        $this->sys_14(0,0);
+        $this->sys_331(0,0);
+
+        $this->insertTestData();
+        
+        $this->output .= "</ul>";
     }
-    
+   
     
     public function insertTestData(){
 
@@ -182,6 +176,17 @@ class InsertDBContent {
     	
     	$this->insertInto("game", $sql);
     }
+
+
+    private function insertInto($table, $sql){
+        
+        if (mysqli_query($this->connection, $sql)){
+            $this->output .= "<li>INSERT INTO <strong>$table</strong> was successfull</li>";
+        } else {
+            $this->output .= "<li>Error in INSERT INTO <strong>$table</strong>: " . mysqli_error($this->connection) . "</li>";
+        }
+    }
+    
     
     public function __toString(){
     	return $this->output;

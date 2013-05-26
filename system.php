@@ -50,13 +50,13 @@
 				    		if(isset($_GET['system_type']) && $_GET['system_type'] != 0){
 				    	 		$nr = $_GET['system_type'];
 				    	 		$sql = "SELECT * FROM system WHERE type=$nr ORDER BY type";
-				    	 		$result = $dbConnector->performSelectQuery($sql);
+				    	 		$result = $dbAccess->performSelectQuery($sql);
 				    	 		while($row = mysqli_fetch_array($result)){
 				    	 			echo "<option value=\"{$row['nr']}\">{$row['name']} - {$row['nr_of_teams']} Teams - {$row['nr_of_games']} - Spiele</option>";
 				    	 		}
 							} else { 
 								$sql = "SELECT * FROM system ORDER BY type";
-								$result = $dbConnector->performSelectQuery($sql);
+								$result = $dbAccess->performSelectQuery($sql);
 								while($row = mysqli_fetch_array($result)){
 									echo "<option value=\"{$row['nr']}\">{$row['name']} - {$row['nr_of_teams']} Teams - {$row['nr_of_games']} Spiele</option>";
 								}
@@ -140,7 +140,7 @@
 									FROM game
 									WHERE sys_nr = {$row['nr']}";
 							
-							$result = $dbConnector->performSelectQuery($sql);
+							$result = $dbAccess->performSelectQuery($sql);
 							
 							$i = 0;
 							while ($row = mysqli_fetch_array($result)) {

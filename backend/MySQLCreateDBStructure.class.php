@@ -1,6 +1,6 @@
 <?php
 
-class CreateDBStructure {
+class MySQLCreateDBStructure {
 
 	private $connection = "";
 	private $output = "";
@@ -81,7 +81,7 @@ class CreateDBStructure {
     	$sql = "CREATE TABLE $table (
                 id INT NOT NULL AUTO_INCREMENT,
      			name varchar(50) NOT NULL UNIQUE,
-     			game_length INT DEFAULT 25,
+     			game_duration INT DEFAULT 25,
      			points_win INT DEFAULT 3,
      			points_draw INT DEFAULT 1,
      			points_defeat INT DEFAULT 0,
@@ -167,7 +167,7 @@ class CreateDBStructure {
      			div_id INT NOT NULL,
      			sys_nr INT,
      			startgroup TINYINT(1),
-     			modified_game_length INT DEFAULT null, 
+     			modified_game_duration INT DEFAULT null, 
                 PRIMARY KEY(id), 
                 UNIQUE(name, div_id))";
 
@@ -230,7 +230,7 @@ class CreateDBStructure {
      			slot_ref_nr INT NOT NULL,
      			team1_score INT DEFAULT 0,
      			team2_score INT DEFAULT 0,
-     			modified_game_length INT DEFAULT NULL, 
+     			modified_game_duration INT DEFAULT NULL, 
      			invalid TINYINT(1) DEFAULT 0)";
 
 		$this->dropTable($table);

@@ -142,14 +142,14 @@ class MySQLAccess implements DataAccess {
 
 		$divisions = array();
 
-		$sql = "SELECT id, name, game_length, points_win, points_draw, points_defeat FROM division";
+		$sql = "SELECT id, name, game_duration, points_win, points_draw, points_defeat FROM division";
 
 		$result = $this->performSelectQuery($sql);
 		while($row = mysqli_fetch_assoc($result)) {	
 
 			array_push($divisions, array(	'id' => $row['id'],
 											'name' => $row['name'],
-											'game_length' => $row['game_length'],
+											'game_duration' => $row['game_duration'],
 											'points_win' => $row['points_win'],
 											'points_draw' => $row['points_draw'],
 											'points_defeat' => $row['points_defeat']));
@@ -184,7 +184,7 @@ class MySQLAccess implements DataAccess {
 
 		$groups = array();
 
-		$sql = "SELECT id, name, div_id, sys_nr, startgroup, modified_game_length FROM `group`";
+		$sql = "SELECT id, name, div_id, sys_nr, startgroup, modified_game_duration FROM `group`";
 
 		$result = $this->performSelectQuery($sql);
 		while($row = mysqli_fetch_assoc($result)) {
@@ -194,7 +194,7 @@ class MySQLAccess implements DataAccess {
 										'div_id' => $row['div_id'],
 										'sys_nr' => $row['sys_nr'],
 										'startgroup' => $row['startgroup'],
-										'modified_game_length' => $row['modified_game_length']));
+										'modified_game_duration' => $row['modified_game_duration']));
 		}
 
 		return $groups;

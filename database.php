@@ -1,7 +1,7 @@
 <?php
   
-require_once '/backend/CreateDBStructure.class.php';
-require_once '/backend/InsertDBContent.class.php';
+require_once '/backend/MySQLCreateDBStructure.class.php';
+require_once '/backend/MySQLSystemCreation.class.php';
 
 ?>
 
@@ -66,7 +66,7 @@ require_once '/backend/InsertDBContent.class.php';
 				if (isset($_GET['function'])){
 					switch($_GET['function']){
 						case "buildDb": {
-							$createDBStructure = new CreateDBStructure($connection);
+							$createDBStructure = new MySQLCreateDBStructure($connection);
 							echo $createDBStructure;
 							break;
 						}
@@ -85,8 +85,9 @@ require_once '/backend/InsertDBContent.class.php';
 							break;
 						}
 						case "insertSystems": {
-							$insertDBContent = new InsertDBContent($connection);
-							echo $insertDBContent;
+							$systemCreation = new MySQLSystemCreation($connection);
+							$systemCreation->insertSystems();
+							echo $systemCreation;
 							break;
 						}
 						case "deleteSystems": {

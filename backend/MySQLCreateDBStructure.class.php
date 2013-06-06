@@ -228,8 +228,8 @@ class MySQLCreateDBStructure {
      			slot_team1_nr INT NOT NULL,
      			slot_team2_nr INT NOT NULL,
      			slot_ref_nr INT NOT NULL,
-     			team1_score INT DEFAULT 0,
-     			team2_score INT DEFAULT 0,
+     			team1_score INT DEFAULT NULL,
+     			team2_score INT DEFAULT NULL,
      			modified_game_duration INT DEFAULT NULL, 
      			invalid TINYINT(1) DEFAULT 0)";
 

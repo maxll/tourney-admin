@@ -37,16 +37,18 @@ function GroupViewModel(){
 			var parsed =  JSON.parse(returnedData);
 
 			for (var i = 0; i < parsed.teams.length; i++) {
-				self.teams.push({ id: parsed.teams[i].id, name: parsed.teams[i].name, div_id: parsed.teams[i].div_id});
+				self.teams.push(new Team(parsed.teams[i].id, parsed.teams[i].name, parsed.teams[i].div_id));
 			}
 		});
 	};
 
 	self.filteredTeamsByDivision = function(div_id) {
 		return ko.utils.arrayFilter(self.teams(), function(team) {
-			return (team.div_id == div_id);
+			return (team.div_id == div_id && team.inStartGroup() === false);
 		});
 	};
+
+
 
 	// systems
 	// ----------
@@ -75,12 +77,14 @@ function GroupViewModel(){
 			var parsed = JSON.parse(returnedData);
 
 			for (var i = 0; i < parsed.systems.length; i++) {
-				self.systems.push({ nr: parsed.systems[i].nr,
-									group_id: parsed.systems[i].group_id,
-									name: parsed.systems[i].name,
-									type: parsed.systems[i].type,
-									nr_of_games: parsed.systems[i].nr_of_games,
-									nr_of_teams: parsed.systems[i].nr_of_teams });
+				if(Number(parsed.systems[i].group_id) === 0){
+					self.systems.push({ nr: parsed.systems[i].nr,
+										group_id: parsed.systems[i].group_id,
+										name: parsed.systems[i].name,
+										type: parsed.systems[i].type,
+										nr_of_games: parsed.systems[i].nr_of_games,
+										nr_of_teams: parsed.systems[i].nr_of_teams });
+				}
 			}
 		});
 	};
@@ -135,6 +139,28 @@ function GroupViewModel(){
 	};
 
 
+	// prev_groups
+	// --------------
+
+	self.prevGroups = ko.observableArray([]);
+
+	self.getAllPrevGroups = function() {
+		self.prevGroups.removeAll();
+
+		$.getJSON("backend/handleAjaxRequests.php", {getAllPrevGroups : 1}, function(returnedData){
+
+			var parsed = JSON.parse(returnedData);
+
+			for(var i = 0; i < parsed.prevGroups.length; i++) {
+				self.prevGroups.push({	group_id: parsed.prevGroups[i].group_id,
+										prev_group_id: parsed.prevGroups[i].prev_group_id,
+										position_start: parsed.prevGroups[i].position_start,
+										position_end: parsed.prevGroups[i].position_end});
+			}
+		});
+	};
+
+
 
 	// Control UI
 	// ----------
@@ -160,6 +186,10 @@ function GroupViewModel(){
 			return false;
 		}
 
+		if(self.checkedTeams().length < 3){
+			return false;
+		}
+
 		return true;
 	});
 
@@ -169,9 +199,30 @@ function GroupViewModel(){
 	self.getAllSystems();
 	self.getAllGroups();
 
+	self.getAllStats();
 	self.getAllTeams();
 
 }
+
+
+function Team(id, name, div_id){
+	var self = this;
+
+	self.id = ko.observable(id);
+	self.name = name;
+	self.div_id = div_id;
+	self.inStartGroup = ko.computed(function() {
+
+		for(var i = 0; i < groupViewModel().stats().length; i++){
+			if(self.id() == groupViewModel().stats()[i].team_id) {
+				return true;
+			}
+		}
+		return false;
+	});
+}
+
+
 
 // jquery document ready()
 $(document).ready(function(){

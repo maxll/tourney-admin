@@ -39,6 +39,9 @@ $dbAccess = new MySQLAccess();
 				// getAllStats();
 				getData('stats');
 				break;
+			case 'getAllPrevGroups':
+				getData('prevGroups');
+				break;
 			}
 		}
 	}
@@ -195,6 +198,9 @@ function getData($dataName){
 			break;
 		case 'stats':
 			$return = $dbAccess->selectAllStatsPerGroup();
+			break;
+		case 'prevGroups':
+			$return = $dbAccess->selectAllPrevGroups();
 			break;
 	}
 

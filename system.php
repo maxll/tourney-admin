@@ -82,7 +82,7 @@
 							$system = $_GET['system'];
 
 							$sql = "SELECT * FROM system WHERE nr = {$system} ";
-							$result = $dbConnector->performSelectQuery($sql);
+							$result = $dbAccess->performSelectQuery($sql);
 							$row = mysqli_fetch_array($result);
 							
 							// SYSTEM

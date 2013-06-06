@@ -200,10 +200,8 @@ function TeamViewModel(){
 		$(element).fadeOut();
 	};
 
-	// get all divisions from DB with Ajax
-	self.getAllDivisions();
 
-	// get all teams from DB with Ajax
+	self.getAllDivisions();
 	self.getAllTeams();
 }
 

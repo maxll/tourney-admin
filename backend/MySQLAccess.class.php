@@ -201,6 +201,25 @@ class MySQLAccess implements DataAccess {
 	}
 
 
+	public function selectAllPrevGroups(){
+
+		$prevGroups = array();
+
+		$sql = "SELECT group_id, prev_group_id, position_start, position_end FROM prev_group";
+
+		$result = $this->performSelectQuery($sql);
+		while($row = mysqli_fetch_assoc($result)) {
+
+			array_push($prevGroups, array(	'group_id' => $row['group_id'],
+											'prev_group_id' => $row['group_id'],
+											'position_start' => $row['position_start'],
+											'position_end' => $row['position_end']));
+		}
+
+		return $prevGroups;
+	}
+
+
 	public function selectAllStatsPerGroup(){
 
 		$stats = array();
@@ -227,14 +246,7 @@ class MySQLAccess implements DataAccess {
 		return $stats;
 	}
 
-/*
-delimiter //
-create trigger calculate_stats before insert on stats_per_group
-for each row
-begin
-set new.goaldiff = goals_scored - goals_received;
-end;//
-*/
+
 
 	public function performSelectQuery($sql){
 		

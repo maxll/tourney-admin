@@ -21,10 +21,10 @@ require_once '/backend/MySQLSystemCreation.class.php';
 				    	<?php
 				    	
 				    		/**
-				    		 * print all tables from the database in $dbConnector
+				    		 * print all tables from the database in $dbAccess
 				    		 */
 				    		 
-				    	 	$result = mysqli_query($connection, "SHOW TABLES FROM " . $dbConnector->getDBName());
+				    	 	$result = mysqli_query($connection, "SHOW TABLES FROM " . $dbAccess->getDBName());
 				    	 	if (!$result) {
 				    	 		die("Query to show systems from table failed");
 				    	 	}
@@ -113,7 +113,7 @@ require_once '/backend/MySQLSystemCreation.class.php';
 							
 								$table = $_POST['table'];
 								
-								$result = $dbConnector->performSelectQuery("SELECT * FROM $table");
+								$result = $dbAccess->performSelectQuery("SELECT * FROM $table");
 								$fields_num = mysqli_num_fields($result);
 							
 								echo "<h3>Tabelle: {$table}</h3>";

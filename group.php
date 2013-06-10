@@ -60,7 +60,7 @@
 					<tr id="teamSelection" style="vertical-align: top">
 						<td>Auswahl Mannschaften:</td>
 						<td>
-							<!--ko foreach: filteredTeamsByDivision(selectedDivision())-->
+							<!--ko foreach: filterAvailableTeamsByDivision(selectedDivision())-->
 								<input type="checkbox" data-bind="value: id, checked: $root.checkedTeams"><!--ko text: name--><!--/ko--></input><br />
 							<!--/ko-->
 						</td>
@@ -68,9 +68,9 @@
 					<tr>
 						<td>Spielsystem:</td>
 						<td>
-							<select data-bind="options: filteredSystemByNrOfTeams(checkedTeamSize()), optionsValue: 'nr', optionsText: 'name', optionsCaption: 'Spielsystem wählen..', value: selectedSystem"></select>&nbsp;
+							<select data-bind="options: filterSystemByNrOfTeams(checkedTeamSize()), optionsValue: 'nr', optionsText: 'name', optionsCaption: 'Spielsystem wählen..', value: selectedSystem"></select>&nbsp;
 							<small>
-								<!--ko foreach: filteredSystemByNr(selectedSystem())-->
+								<!--ko foreach: filterSystemByNr(selectedSystem())-->
 									(<!--ko text: nr_of_games--><!--/ko--> Spiele)
 								<!--/ko-->
 							</small>

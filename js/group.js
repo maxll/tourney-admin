@@ -42,7 +42,7 @@ function GroupViewModel(){
 		});
 	};
 
-	self.filteredTeamsByDivision = function(div_id) {
+	self.filterAvailableTeamsByDivision = function(div_id) {
 		return ko.utils.arrayFilter(self.teams(), function(team) {
 			return (team.div_id == div_id && team.inStartGroup() === false);
 		});
@@ -57,13 +57,13 @@ function GroupViewModel(){
 
 	self.selectedSystem = ko.observable();
 
-	self.filteredSystemByNr = function(sys_nr) {
+	self.filterSystemByNr = function(sys_nr) {
 		return ko.utils.arrayFilter(self.systems(), function(system){
 			return (system.nr == sys_nr);
 		});
 	};
 
-	self.filteredSystemByNrOfTeams = function(nr_of_teams) {
+	self.filterSystemByNrOfTeams = function(nr_of_teams) {
 		return ko.utils.arrayFilter(self.systems(), function(system){
 			return (system.nr_of_teams == nr_of_teams);
 		});
@@ -161,6 +161,15 @@ function GroupViewModel(){
 	};
 
 
+	/*
+	
+	insert new group: name, division, system, startgroup, modified game duration
+	for each team:
+		insert stats_per_group: team_id, group_id
+	insert system with nr => select count(*) from system where nr like "13xx" / "14xx"...
+
+	*/
+
 
 	// Control UI
 	// ----------
@@ -170,11 +179,6 @@ function GroupViewModel(){
 		return self.checkedTeams().length;
 	});
 
-
-	// check:
-	// available team: team, that does not belong to starting group yet --> check if there is stats_per_group with team_id
-	// or set a column in team --> inStartGroup
-
 	self.startGroupCheckState = ko.observable("yes");
 
 	self.requirementsFulfilled = ko.computed(function(){
@@ -182,7 +186,7 @@ function GroupViewModel(){
 			return false;
 		}
 
-		if((self.startGroupCheckState() == "yes") && (self.filteredTeamsByDivision(self.selectedDivision()).length < 3)){
+		if((self.startGroupCheckState() == "yes") && (self.filterAvailableTeamsByDivision(self.selectedDivision()).length < 3)){
 			return false;
 		}
 
@@ -192,6 +196,7 @@ function GroupViewModel(){
 
 		return true;
 	});
+
 
 
 	// fill model

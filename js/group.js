@@ -164,11 +164,23 @@ function GroupViewModel(){
 	/*
 	
 	insert new group: name, division, system, startgroup, modified game duration
-	for each team:
+	for each team: (id aus checkedTeams())
 		insert stats_per_group: team_id, group_id
 	insert system with nr => select count(*) from system where nr like "13xx" / "14xx"...
 
 	*/
+
+	self.saveGroup = function(){
+
+		// insert new group and return id for other tables
+
+		var jsonGoupData = ko.toJSON({newGroups: self.newGroups()});
+
+		$.post("backend/handleAjaxRequests.php", {insertNewGroup: jsonGroupData}, function(returnedData) {
+
+		});
+	};
+
 
 
 	// Control UI

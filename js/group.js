@@ -112,10 +112,13 @@ function GroupViewModel(){
 									div_id: parsed.groups[i].div_id,
 									sys_nr: parsed.groups[i].sys_nr,
 									startgroup: parsed.groups[i].startgroup,
-									modified_game_length: parsed.groups[i].modified_game_length });
+									modified_game_duration: parsed.groups[i].modified_game_duration });
 			}
 		});
 	};
+
+	self.newGroup = ko.observableArray([]);
+	self.newGroupName = ko.observable();
 
 
 	// stats_per_group
@@ -172,13 +175,50 @@ function GroupViewModel(){
 
 	self.saveGroup = function(){
 
-		// insert new group and return id for other tables
+		// new id = nr of groups + 1
+		var newId = self.groupSize + 1;
+
+		// new sysNr
+		// cut off last 2 digits
+		var sysNr = self.selectedSystem().toString().substring(0, self.selectedSystem().length - 2);
+		// now count all systems which got same cut off nr as the selected one
+		var sysCount = 0;
+		for(var i = 0; i < self.systems().length; i++){
+			if(self.systems()[i].nr.toString().substring(0, self.systems()[i].nr.length - 2) == sysNr){
+				sysCount++;
+			}
+		}
+		// merge sysNr and sysCount
+		if(sysCount < 10){
+			sysCount = "0" + sysCount.toString();
+		}
+		var newSysNr = sysNr + sysCount;
+
+
+		self.newGroup.push({	id: self.newId,
+								name: self.newGRoupName,
+								div_id: self.selectedDivision,
+								sys_nr: newSysNr,
+								modified_game_duration: "a"});
 
 		var jsonGoupData = ko.toJSON({newGroups: self.newGroups()});
 
 		$.post("backend/handleAjaxRequests.php", {insertNewGroup: jsonGroupData}, function(returnedData) {
 
 		});
+
+
+		// newId: groupSize + 1
+		// division: selectedDivision() -- int id
+		// startgroup: startGroupCheckState() -- true / false
+		// system_nr:
+		// selectedSystem() --> id
+		//		filter systems() by id pattern like and store nr
+		//		self.systems().nr  => 1400 1300 313...
+		// modified game duration:  ???
+		// 
+		// teams: checkedTeams() -- int id
+
 	};
 
 

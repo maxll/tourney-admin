@@ -31,7 +31,7 @@
 				<tbody>
 					<tr>
 						<td>Name der Gruppe:</td>
-						<td><input type="text" placeholder="Name"/></td>
+						<td><input type="text" placeholder="Name" data-bind="value: newGroupName"/></td>
 					</tr>
 					<tr>
 						<td>Spielklasse:</td>
@@ -92,7 +92,7 @@
 			</table>
 		</section>	
 		<section>					
-			<button data-bind="enable: requirementsFulfilled">Gruppe anlegen</button>
+			<button data-bind="click: saveGroup, enable: requirementsFulfilled">Gruppe anlegen</button>
 			<p><br /><br /><br /></p>
 		</section>
 	</body>

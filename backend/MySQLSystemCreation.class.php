@@ -19,9 +19,9 @@ class MySQLSystemCreation {
      *  
      *  Zwischenrunde:
      *
-     *  262001  -> 6 Teams aus 2 Gruppen, Platz 1 der Gruppen spielen gegen Platz 2 und 3. Platz 2 der Gruppen spielen noch gegen Platz 3.
+     *  26200   -> 6 Teams aus 2 Gruppen, Platz 1 der Gruppen spielen gegen Platz 2 und 3. Platz 2 der Gruppen spielen noch gegen Platz 3.
      *			-> 6 Spiele
-     *  263001	-> 6 Teams aus 3 Gruppen, Platz 1 der Gruppen spielen gegen Platz 2 aus der anderen Gruppe
+     *  26300	-> 6 Teams aus 3 Gruppen, Platz 1 der Gruppen spielen gegen Platz 2 aus der anderen Gruppe
      *  		-> 6 Spiele
      *  
      *  KO-Runde:
@@ -147,9 +147,9 @@ class MySQLSystemCreation {
     
     function sys_331($nr, $group_id){
     	 
-//     	if($nr <= 9){
-//     		$nr = "0$nr";
-//     	}
+    	if($nr <= 9){
+    		$nr = "0$nr";
+    	}
     	 
     	// system
     	$sql = "INSERT INTO system (nr, group_id, name, type, nr_of_teams, nr_of_games)
